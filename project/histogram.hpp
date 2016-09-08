@@ -1,19 +1,31 @@
-#ifndef _NUMBER_LIST_HPP
-#define _NUMBER_LIST_HPP
+#ifndef HISTOGRAM_HPP
+#define HISTOGRAM_HPP
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
+#include <numeric>
 #include <stdexcept>
 #include <cmath>
 
 /**
  * Read a list of integers between 0 and 255, and does some basic stats on them.
  */
-class NumberList {
+class Histogram {
 public:
-    NumberList(std::string filename);
-    void printStemAndLeaf();
+    static Histogram fromFile(std::string filename);
+
+    Histogram(std::vector<int> list);
+
+    void printStemAndLeaf() const;
+
+    inline std::vector<int> getBins() const { return bins; }
+
+    inline std::vector<double> getNormalizedBins() const {
+        return normalizedBins;
+    }
+
+    double zipNormalized(const Histogram &other) const;
 
     class FileNotFoundError : public std::runtime_error {
     public:
@@ -36,8 +48,9 @@ public:
 
     private:
     std::vector<int> numbers;
-    int counts[64] = {0};
-
+    std::vector<int> bins;
+    std::vector<double> normalizedBins;
+    static const size_t binCount = 64;
 };
 
 #endif

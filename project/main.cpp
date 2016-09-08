@@ -3,16 +3,18 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <number_list.hpp>
+#include <histogram.hpp>
 
 int main(int argc, char *argv[]) {
-    if(argc < 2) {
-        std::cerr << "No filename given" << std::endl;
+    if(argc < 3) {
+        std::cerr << "Not enough filenames given" << std::endl;
         return -1;
     }
     try {
-        NumberList l(argv[1]);
-        l.printStemAndLeaf();
+        Histogram first = Histogram::fromFile(argv[1]);
+        Histogram second = Histogram::fromFile(argv[2]);
+        double r = first.zipNormalized(second);
+        std::cout << r << std::endl;
         return 0;
     }
     catch(const std::runtime_error &e) {
