@@ -8,8 +8,12 @@ Histogram Histogram::fromFile(std::string fname) {
     }
     st >> std::skipws;
     int x;
-    while(st >> x) {
-        if(st.fail() && ! st.eof()) {
+    while(! st.eof()) {
+        st >> x;
+        if(st.eof()) {
+            break;
+        }
+        if(st.fail()) {
             throw BadInputError();
         }
         numbers.push_back(x);
