@@ -43,5 +43,6 @@ double Histogram::zipNormalized(const Histogram &other) const {
     auto n = other.getNormalizedBins();
     return std::inner_product(normalizedBins.begin(),
             normalizedBins.end(),
-            n.begin(), (double) 0.0);
+            n.begin(), 
+            (double) 0.0);
 }
