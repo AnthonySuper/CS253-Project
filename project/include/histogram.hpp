@@ -7,14 +7,13 @@
 #include <numeric>
 #include <stdexcept>
 #include <cmath>
+#include <errors.hpp>
 
 /**
  * Read a list of integers between 0 and 255, and does some basic stats on them.
  */
 class Histogram {
 public:
-    static Histogram fromFile(std::string filename);
-
     Histogram(std::vector<int> list);
 
     void printStemAndLeaf() const;
@@ -25,27 +24,16 @@ public:
         return normalizedBins;
     }
 
-    double zipNormalized(const Histogram &other) const;
+    double dotProduct(const Histogram &other) const;
 
-    class FileNotFoundError : public std::runtime_error {
-    public:
-        FileNotFoundError(std::string f) : 
-            runtime_error("File " + f + " not found"){}
-    };
-
+    double minimumSum(const Histogram &other) const;
+   
     class BadNumberError : public std::runtime_error {
     public:
         BadNumberError(int i) :
             runtime_error("Recieved unexpected number " + std::to_string(i))
         {}
     };
-
-    class BadInputError : public std::runtime_error {
-    public:
-        BadInputError() :
-            runtime_error("Bad input recieved") {}
-    };
-
     private:
     std::vector<int> numbers;
     std::vector<int> bins;

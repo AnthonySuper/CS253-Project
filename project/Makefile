@@ -1,25 +1,25 @@
-BINDIR := ./bin
+OBJDIR := ./obj
 SRCDIR := ./src
-CXXFLAGS := -Iinclude -std=c++14
+CXXFLAGS := -Iinclude -std=c++14 -Wall
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(BINDIR)/%.o)
+OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 TARGET := PA3
 
-.PHONY: $(BINDIR) clean
+.PHONY: $(OBJDIR) clean
 
-all: $(BINDIR) $(TARGET)
+all: $(OBJDIR) $(TARGET)
 
 $(TARGET): main.cpp $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 
-$(OBJECTS): $(BINDIR)/%.o : $(SRCDIR)/%.cpp
+$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BINDIR):
+$(OBJDIR):
 	mkdir -p $@
 
 clean:
-	rm -rf bin
+	rm -rf obj
 	rm $(TARGET)
 

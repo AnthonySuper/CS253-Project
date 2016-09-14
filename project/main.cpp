@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <histogram.hpp>
+#include <pgm_image.hpp>
+#include <depth_image.hpp>
 
 int main(int argc, char *argv[]) {
     if(argc < 3) {
@@ -11,10 +12,13 @@ int main(int argc, char *argv[]) {
         return -1;
     }
     try {
-        Histogram first = Histogram::fromFile(argv[1]);
-        Histogram second = Histogram::fromFile(argv[2]);
-        double r = first.zipNormalized(second);
-        std::cout << r << std::endl;
+        auto first = PgmImage(argv[1]);
+        auto second = PgmImage(argv[2]);
+        auto firstImage = DepthImage(first);
+        auto secondImage = DepthImage(second);
+        auto compared = firstImage.compareTo(secondImage);
+        std::cout << std::get<0>(compared) << '\t' << std::get<1>(compared);
+        std::cout << std::endl;
         return 0;
     }
     catch(const std::runtime_error &e) {
