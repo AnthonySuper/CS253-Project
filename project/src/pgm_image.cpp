@@ -19,7 +19,9 @@ PgmImage::PgmImage(std::string filename) {
     if(! (f >> width) || ! (f >> height) || ! (f >> maxValue)) {
         throw InvalidFormatError("Width, Height, or max value not given");
     }
-
+    if(maxValue != 255) {
+        throw InvalidDepthError();
+    }
     int i;
     while(! f.eof()) {
         f >> i;

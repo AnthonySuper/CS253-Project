@@ -8,9 +8,9 @@ DepthImage::DepthImage(const PgmImage &i) :
 }
 
 std::tuple<double, double> DepthImage::compareTo(const DepthImage& o) {
-    if(pixelData.size() != o.pixelData.size()) {
-        throw InvalidComparisonError(pixelData.size(), 
-                o.pixelData.size());
+    if(height != o.height || width != o.width) {
+        throw InvalidComparisonError(height, width, 
+                o.height, o.width);
     }
     double s = histogram.minimumSum(o.histogram);
     double sum = 0;

@@ -18,6 +18,12 @@ class PgmImage {
         inline int getMaxValue() const {
             return maxValue;
         }
+
+        class InvalidDepthError : public std::runtime_error {
+        public:
+            InvalidDepthError() :
+                runtime_error("Pixel depth was something besides 255") {}
+        };
     private:
         int width;
         int height;

@@ -17,11 +17,11 @@ class DepthImage {
 
     class InvalidComparisonError: public std::runtime_error {
         public:
-          InvalidComparisonError(int i, int q) :
-            std::runtime_error(std::string("Expected length of ") +\
-                    std::to_string(i) + \
-                    std::string(", got length of ") +\
-                    std::to_string(q)) {
+          InvalidComparisonError(int h, int w, int h2, int w2) :
+            std::runtime_error(std::string("Expected image with dimensions ") +\
+                    std::to_string(h) + ',' + std::to_string(w) +\
+                    std::string(", got image with dimensions ") +\
+                    std::to_string(h2) + ',' + std::to_string(w2)) {
             }
     };
 };
