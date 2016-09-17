@@ -2,3 +2,4 @@ exec1
 bin/*
 obj/*
 PA3
+.DS_Store
