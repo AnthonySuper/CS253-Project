@@ -3,6 +3,9 @@
 Histogram::Histogram(std::vector<int> i) : numbers(i),
   bins(binCount, 0), 
   normalizedBins(binCount, 0) {
+    if(numbers.size() == 0) {
+        throw EmptyVectorError();
+    }
     for(auto q: numbers) {
         if(q > 255 || q < 0) {
             throw BadNumberError(q);

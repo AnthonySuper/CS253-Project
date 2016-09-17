@@ -34,6 +34,14 @@ public:
             runtime_error("Recieved unexpected number " + std::to_string(i))
         {}
     };
+
+    class EmptyVectorError : public std::runtime_error {
+    public:
+        EmptyVectorError() :
+            runtime_error("Empty vector passed, cannot make histogram")
+        {}
+    };
+
     private:
     std::vector<int> numbers;
     std::vector<int> bins;

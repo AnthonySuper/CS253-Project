@@ -5,6 +5,13 @@ DepthImage::DepthImage(const PgmImage &i) :
     width(i.getWidth()),
     pixelData(i.getPixels()),
     histogram(pixelData) {
+        using ia = std::invalid_argument;
+        if(height < 0 || width < 0) {
+            throw ia("Height or width is zero");
+        }
+        if(pixelData.size() != height * width) {
+            throw ia("pixelData does not match height or width");
+        }
 }
 
 std::tuple<double, double> DepthImage::compareTo(const DepthImage& o) {

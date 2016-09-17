@@ -24,5 +24,6 @@ class DepthImage {
                     std::to_string(h2) + ',' + std::to_string(w2)) {
             }
     };
+
 };
 #endif

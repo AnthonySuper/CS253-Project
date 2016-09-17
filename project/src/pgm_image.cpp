@@ -23,23 +23,15 @@ PgmImage::PgmImage(std::string filename) {
         throw InvalidDepthError();
     }
     int i;
-    while(! f.eof()) {
+    while(true) {
         f >> i;
         // read put us at EOF
-        if(f.eof()) {
+        if(f.eof() && f.fail()) {
             break;
         }
-        if(f.fail()) {
+        else if(f.fail()) {
             throw InvalidFormatError("Read a non-number!");
         }
         pixelData.push_back(i);
-    }
-    if(pixelData.size() != width * height) {
-        auto pds = std::to_string(pixelData.size());
-        auto epds = std::to_string(width * height);
-        std::string err = std::string("Expected to have ") \
-                          + epds + std::string(" pixels, had ") \
-                          + pds;
-        throw InvalidFormatError(err);
     }
 }
