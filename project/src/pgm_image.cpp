@@ -23,15 +23,13 @@ PgmImage::PgmImage(std::string filename) {
         throw InvalidDepthError();
     }
     int i;
-    while(true) {
-        f >> i;
-        // read put us at EOF
-        if(f.eof() && f.fail()) {
-            break;
-        }
-        else if(f.fail()) {
-            throw InvalidFormatError("Read a non-number!");
+    while(! f.eof() && f >> i) {
+        if(f.fail()) {
+            throw InvalidFormatError("Read a non-number! (1)");
         }
         pixelData.push_back(i);
+    }
+    if(! f.eof()) {
+        throw InvalidFormatError("Read a non-number!");
     }
 }

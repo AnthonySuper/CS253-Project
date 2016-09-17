@@ -1,6 +1,6 @@
 OBJDIR := ./obj
 SRCDIR := ./src
-CXXFLAGS := -Iinclude -std=c++14 -Wall
+CXXFLAGS := -Iinclude -std=c++14 -Wall -g
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 TARGET := PA3
