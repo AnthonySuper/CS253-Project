@@ -3,8 +3,8 @@
 // constructor is slightly too large, I think. Oh well.
 PgmImage::PgmImage(std::string filename) {
     std::ifstream f(filename);
+    f >> std::skipws;
     // File must start with these two cahracters, so we disallow whitespace
-    f >> std::noskipws;
     if(! f.is_open()) {
         throw FileNotFoundError(filename);
     }
@@ -15,7 +15,6 @@ PgmImage::PgmImage(std::string filename) {
         throw InvalidFormatError("File lacked proper header");
     }
     // whitespace is now allowed again
-    f >> std::skipws;
     if(! (f >> width) || ! (f >> height) || ! (f >> maxValue)) {
         throw InvalidFormatError("Width, Height, or max value not given");
     }
