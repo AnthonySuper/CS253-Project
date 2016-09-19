@@ -6,7 +6,7 @@ DepthImage::DepthImage(const PgmImage &i) :
     pixelData(i.getPixels()),
     histogram(pixelData) {
         using ia = std::invalid_argument;
-        if(height =< 0 || width =< 0) {
+        if(height <= 0 || width <= 0) {
             throw ia("Height or width is zero");
         }
         if(pixelData.size() != (unsigned int) height * width) {
