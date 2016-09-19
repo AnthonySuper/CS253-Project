@@ -14,7 +14,7 @@ Histogram::Histogram(std::vector<int> i) : numbers(i),
         bins[index] = bins[index] + 1;
     }
     const auto numNumbers = numbers.size();
-    for(int i = 0; i < binCount; ++i) {
+    for(size_t i = 0; i < binCount; ++i) {
         normalizedBins[i] = (double) bins[i] / numNumbers;
     } 
 }
@@ -36,7 +36,7 @@ double Histogram::dotProduct(const Histogram &other) const {
 double Histogram::minimumSum(const Histogram &other) const {
     double accum = 0;
     auto otherBins = other.getNormalizedBins();
-    for(int i = 0; i < binCount; i++) {
+    for(size_t i = 0; i < binCount; i++) {
         auto a = std::min(normalizedBins[i], otherBins[i]);
         accum += a;
     }
