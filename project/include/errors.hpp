@@ -5,13 +5,26 @@
 
 class FileNotFoundError : public std::runtime_error {
     public:
-        FileNotFoundError(std::string f);
+        FileNotFoundError(std::string filename) :
+            runtime_error{"File not found " + filename}
+        {}
 };
 
 class InvalidFormatError : public std::runtime_error {
     public:
-        InvalidFormatError();
-        InvalidFormatError(std::string msg);
+        InvalidFormatError() : 
+            runtime_error{"Input had invalid format!"}
+        {}
+        InvalidFormatError(std::string msg) : 
+            runtime_error{msg}
+        {}
+};
+
+class BadNumberError : public std::runtime_error {
+    public:
+        BadNumberError(int i) :
+            runtime_error("Recieved unexpected number " + std::to_string(i))
+    {}
 };
 
 #endif

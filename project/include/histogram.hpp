@@ -14,7 +14,7 @@
  */
 class Histogram {
 public:
-    Histogram(std::vector<int> list);
+    Histogram(std::vector<int> &list);
 
     void printStemAndLeaf() const;
 
@@ -28,12 +28,6 @@ public:
 
     double minimumSum(const Histogram &other) const;
    
-    class BadNumberError : public std::runtime_error {
-    public:
-        BadNumberError(int i) :
-            runtime_error("Recieved unexpected number " + std::to_string(i))
-        {}
-    };
 
     class EmptyVectorError : public std::runtime_error {
     public:
@@ -43,7 +37,6 @@ public:
     };
 
     private:
-    std::vector<int> numbers;
     std::vector<int> bins;
     std::vector<double> normalizedBins;
     static const size_t binCount = 64;

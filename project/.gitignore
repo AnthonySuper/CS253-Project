@@ -2,4 +2,6 @@ exec1
 bin/*
 obj/*
 PA3
+PA4
+test
 .DS_Store

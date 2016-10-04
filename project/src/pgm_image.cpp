@@ -22,14 +22,23 @@ PgmImage::PgmImage(std::string filename) {
     if(maxValue != 255) {
         throw InvalidDepthError();
     }
+    if(height < 0 || width < 0) {
+        throw InvalidFormatError("Height or width impossible");
+    }
     int i;
     while(! f.eof() && f >> i) {
         if(f.fail()) {
             throw InvalidFormatError("Read a non-number! (1)");
         }
+        if(i < 0 || i > 255) {
+            throw BadNumberError(i);
+        }
         pixelData.push_back(i);
     }
     if(! f.eof()) {
         throw InvalidFormatError("Read a non-number!");
+    }
+    if(pixelData.size() != (unsigned int) height * width) {
+        throw InvalidFormatError("File's list of ints is too big or small");
     }
 }

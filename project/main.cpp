@@ -5,20 +5,15 @@
 #include <stdexcept>
 #include <pgm_image.hpp>
 #include <depth_image.hpp>
+#include <depth_image_list.hpp>
 
 int main(int argc, char *argv[]) {
-    if(argc < 3) {
+    if(argc < 2) {
         std::cerr << "Not enough filenames given" << std::endl;
         return -1;
     }
     try {
-        auto first = PgmImage(argv[1]);
-        auto second = PgmImage(argv[2]);
-        auto firstImage = DepthImage(first);
-        auto secondImage = DepthImage(second);
-        auto compared = firstImage.compareTo(secondImage);
-        std::cout << std::get<0>(compared) << '\t' << std::get<1>(compared);
-        std::cout << std::endl;
+        auto d = DepthImageList::fromFile(argv[1]);
         return 0;
     }
     catch(const std::exception &e) {

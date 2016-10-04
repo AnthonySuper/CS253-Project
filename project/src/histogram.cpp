@@ -1,22 +1,27 @@
 #include <histogram.hpp>
 
-Histogram::Histogram(std::vector<int> i) : numbers(i),
-  bins(binCount, 0), 
-  normalizedBins(binCount, 0) {
+inline void numberCheck(int q) {
+    if(q < 0 || q > 255) {
+        throw BadNumberError(q);
+    }
+}
+
+Histogram::Histogram(std::vector<int> &numbers) : 
+    bins(binCount, 0), 
+    normalizedBins(binCount, 0) 
+{
     if(numbers.size() == 0) {
         throw EmptyVectorError();
     }
     for(auto q: numbers) {
-        if(q > 255 || q < 0) {
-            throw BadNumberError(q);
-        }
+        numberCheck(q);
         size_t index = std::floor(q / 4.0);
         bins[index] = bins[index] + 1;
     }
     const auto numNumbers = numbers.size();
     for(size_t i = 0; i < binCount; ++i) {
         normalizedBins[i] = (double) bins[i] / numNumbers;
-    } 
+    }
 }
 
 void Histogram::printStemAndLeaf() const {

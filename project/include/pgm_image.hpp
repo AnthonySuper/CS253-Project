@@ -7,6 +7,8 @@
 #include <memory>
 #include <histogram.hpp>
 
+class DepthImage;
+
 class PgmImage {
     public:
         PgmImage(std::string filename);
@@ -29,6 +31,7 @@ class PgmImage {
         int height;
         int maxValue;
         std::vector<int> pixelData;
+    friend class DepthImage;
 };
 
 #endif
