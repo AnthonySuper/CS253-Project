@@ -6,13 +6,16 @@ inline void numberCheck(int q) {
     }
 }
 
-Histogram::Histogram(std::vector<int> &numbers) : 
+Histogram::Histogram() :
+    bins(binCount, 0),
+    normalizedBins(binCount, 0)
+{}
+
+
+Histogram::Histogram(const std::vector<int> &numbers) : 
     bins(binCount, 0), 
     normalizedBins(binCount, 0) 
 {
-    if(numbers.size() == 0) {
-        throw EmptyVectorError();
-    }
     for(auto q: numbers) {
         numberCheck(q);
         size_t index = std::floor(q / 4.0);

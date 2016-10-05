@@ -18,15 +18,19 @@ class DepthImageListItem {
         inline int getNearestNeighborIndex() {
             return nearestNeighborIndex;
         }
+        inline double getNearestNeighborSimilarity() {
+            return nearestNeighborSimilarity;
+        }
     protected:
         int nearestNeighborIndex = -1;
-        double nearestNeighborDistance = std::numeric_limits<double>::max();
+        double nearestNeighborSimilarity = std::numeric_limits<double>::min();
 };
 
 class DepthImageList {
 public:
     static DepthImageList fromFile(std::string filename);
     using Item = DepthImageListItem;
+    void insert(DepthImage i, std::string fname);
     const std::vector<Item>& calculateNearestNeighbors();
 protected:
     std::vector<Item> list;

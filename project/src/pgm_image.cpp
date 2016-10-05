@@ -1,5 +1,11 @@
 #include <pgm_image.hpp>
 
+static void depthError(int in) {
+    std::stringstream s;
+    s << "Invalid depth, expected 255, got " << in;
+    throw InvalidFormatError(s.str());
+}
+
 // constructor is slightly too large, I think. Oh well.
 PgmImage::PgmImage(std::string filename) {
     std::ifstream f(filename);
@@ -20,7 +26,7 @@ PgmImage::PgmImage(std::string filename) {
         throw InvalidFormatError("Width, Height, or max value not given");
     }
     if(maxValue != 255) {
-        throw InvalidDepthError();
+        depthError(maxValue);
     }
     if(height < 0 || width < 0) {
         throw InvalidFormatError("Height or width impossible");

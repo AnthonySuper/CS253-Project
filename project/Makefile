@@ -1,6 +1,6 @@
 OBJDIR := ./obj
 SRCDIR := ./src
-TESTDIR := ./test
+TESTDIR := ./test_srcs
 CXXFLAGS := -Iinclude -std=c++14 -Wall
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
@@ -9,24 +9,31 @@ TESTOBJS := $(TESTSRCS:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTTARGET := test
 TARGET := PA4
 
-.PHONY: $(OBJDIR) clean
-
-all: $(OBJDIR) $(TARGET)
 
 $(TARGET): main.cpp $(OBJECTS)
+	@mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
+
+.PHONY: clean docs
+
+all: $(OBJDIR) $(TARGET) $(TESTTARGET) $(OBJS)
+
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
+	@mkdir -p $(OBJDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(TESTTARGET): $(TESTOBJS) $(OBJS) test.cpp
-	$(CXX) $(CXXFLAGS) -Itest $^ -o $@
+$(TESTTARGET): $(TESTOBJS) $(OBJECTS) test.cpp
+	$(CXX) $(CXXFLAGS) -Itest_srcs $^ -o $@
 
-
-$(OBJDIR):
-	mkdir -p $@
+$(TESTOBJS): $(OBJDIR)/%.o : $(TESTDIR)/%.cpp
+	@mkdir -p $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -Itest_srcs -c $< -o $@
 
 clean:
 	rm -rf obj
-	rm $(TARGET)
+	rm -f $(TARGET)
+	rm -f $(TESTTARGET)
 
+docs:
+	Doxygen ./Doxyfile

@@ -4,4 +4,6 @@ obj/*
 PA3
 PA4
 test
+test_out
 .DS_Store
+docs/*

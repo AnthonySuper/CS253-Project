@@ -1,0 +1,2 @@
+test_files/pgm/bad_header.pgm
+test_files/pgm/quad_b.pgm

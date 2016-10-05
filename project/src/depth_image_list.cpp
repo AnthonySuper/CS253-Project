@@ -17,20 +17,20 @@ DepthImageList DepthImageList::fromFile(std::string filename) {
 const std::vector<DepthImageList::Item>& 
 DepthImageList::calculateNearestNeighbors() {
     for(int i = 0; i < list.size(); ++i) {
-        auto& current = list[i];
+        auto& current = list.at(i);
         for(int j = i + 1; j < list.size(); ++j) {
-            auto& test = list[j];
+            auto& test = list.at(j);
             if(test.nearestNeighborIndex == i) {
                 continue;
             }
             double sum = current.img.minimumSumComparison(test.img);
-            if(sum < current.nearestNeighborDistance) {
+            if(sum > current.nearestNeighborSimilarity) {
                 current.nearestNeighborIndex = j;
-                current.nearestNeighborDistance = sum;
+                current.nearestNeighborSimilarity = sum;
             }
-            if(sum < test.nearestNeighborDistance) {
+            if(sum > test.nearestNeighborSimilarity) {
                 test.nearestNeighborIndex = i;
-                test.nearestNeighborDistance = sum;
+                test.nearestNeighborSimilarity = sum;
             }
         }
     }

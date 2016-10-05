@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <vector>
 #include <stdexcept>
@@ -14,6 +13,15 @@ int main(int argc, char *argv[]) {
     }
     try {
         auto d = DepthImageList::fromFile(argv[1]);
+        auto neighbors = d.calculateNearestNeighbors();
+        for(auto q : neighbors) {
+            auto nearestIndex = q.getNearestNeighborIndex();
+            auto nearest = neighbors[nearestIndex];
+            auto error = q.getNearestNeighborSimilarity();
+            std::cout << q.filename << "\t";
+            std::cout << nearest.filename << "\t";
+            std::cout << error << std::endl;
+        }
         return 0;
     }
     catch(const std::exception &e) {

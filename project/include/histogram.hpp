@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <numeric>
-#include <stdexcept>
+#include <iterator>
 #include <cmath>
 #include <errors.hpp>
 
@@ -14,7 +14,8 @@
  */
 class Histogram {
 public:
-    Histogram(std::vector<int> &list);
+    Histogram(const std::vector<int> &list);
+    Histogram();
 
     void printStemAndLeaf() const;
 
@@ -27,14 +28,7 @@ public:
     double dotProduct(const Histogram &other) const;
 
     double minimumSum(const Histogram &other) const;
-   
-
-    class EmptyVectorError : public std::runtime_error {
-    public:
-        EmptyVectorError() :
-            runtime_error("Empty vector passed, cannot make histogram")
-        {}
-    };
+               
 
     private:
     std::vector<int> bins;

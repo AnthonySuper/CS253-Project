@@ -8,11 +8,18 @@
 class DepthImage {
     public:
     DepthImage(const PgmImage& img);
-    DepthImage(const PgmImage&& img);
-    const int height;
-    const int width;
-    const std::vector<int> pixelData;
-    const Histogram histogram;
+    DepthImage(PgmImage&& img);
+    DepthImage(DepthImage &&o);
+    DepthImage(DepthImage &o) = default;
     double minimumSumComparison(const DepthImage&);
+    inline int getHeight() { return height; }
+    inline int getWidth() { return width; }
+    inline const std::vector<int>& getPixelData() { return pixelData; }
+    inline const Histogram& getHistogram() { return histogram; }
+    protected:
+    int height;
+    int width;
+    std::vector<int> pixelData;
+    Histogram histogram;
 };
 #endif

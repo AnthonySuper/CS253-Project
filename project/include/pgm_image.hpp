@@ -5,6 +5,7 @@
 #include <vector>
 #include <errors.hpp>
 #include <memory>
+#include <sstream>
 #include <histogram.hpp>
 
 class DepthImage;
@@ -20,18 +21,10 @@ class PgmImage {
         inline int getMaxValue() const {
             return maxValue;
         }
-
-        class InvalidDepthError : public std::runtime_error {
-        public:
-            InvalidDepthError() :
-                runtime_error("Pixel depth was something besides 255") {}
-        };
-    private:
         int width;
         int height;
         int maxValue;
         std::vector<int> pixelData;
-    friend class DepthImage;
 };
 
 #endif
