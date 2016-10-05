@@ -34,7 +34,8 @@ PgmImage::PgmImage(std::string filename) {
     int i;
     while(! f.eof() && f >> i) {
         if(f.fail()) {
-            throw InvalidFormatError("Read a non-number! (1)");
+            throw InvalidFormatError("[1] Read a non-number in file " \
+                    + filename);
         }
         if(i < 0 || i > 255) {
             throw BadNumberError(i);
@@ -42,7 +43,7 @@ PgmImage::PgmImage(std::string filename) {
         pixelData.push_back(i);
     }
     if(! f.eof()) {
-        throw InvalidFormatError("Read a non-number!");
+        throw InvalidFormatError("[2] Read a non-number in file " + filename);
     }
     if(pixelData.size() != (unsigned int) height * width) {
         throw InvalidFormatError("File's list of ints is too big or small");
