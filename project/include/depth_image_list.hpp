@@ -15,10 +15,10 @@ class DepthImageListItem {
         DepthImageListItem(const PgmImage&&, std::string fname);
         DepthImage img;
         const std::string filename;
-        inline int getNearestNeighborIndex() {
+        inline int getNearestNeighborIndex() const {
             return nearestNeighborIndex;
         }
-        inline double getNearestNeighborSimilarity() {
+        inline double getNearestNeighborSimilarity() const {
             return nearestNeighborSimilarity;
         }
     protected:

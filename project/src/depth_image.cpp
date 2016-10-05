@@ -30,6 +30,6 @@ DepthImage::DepthImage(PgmImage &&i) :
     i.maxValue = 0;
 }
 
-double DepthImage::minimumSumComparison(const DepthImage& o) {
+double DepthImage::minimumSumComparison(const DepthImage& o) const {
     return histogram.minimumSum(o.histogram);
 }

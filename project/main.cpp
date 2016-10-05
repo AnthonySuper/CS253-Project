@@ -13,10 +13,10 @@ int main(int argc, char *argv[]) {
     }
     try {
         auto d = DepthImageList::fromFile(argv[1]);
-        auto neighbors = d.calculateNearestNeighbors();
-        for(auto q : neighbors) {
+        auto& neighbors = d.calculateNearestNeighbors();
+        for(auto &q : neighbors) {
             auto nearestIndex = q.getNearestNeighborIndex();
-            auto nearest = neighbors[nearestIndex];
+            auto& nearest = neighbors[nearestIndex];
             auto error = q.getNearestNeighborSimilarity();
             std::cout << q.filename << "\t";
             std::cout << nearest.filename << "\t";

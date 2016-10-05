@@ -14,7 +14,7 @@ TEST_CASE("Errors are propogated", "[DepthImageList]") {
 TEST_CASE("It works properly", "[DepthImageList]") {
     auto q = "test_files/list/big.txt";
     auto d = DepthImageList::fromFile(q);
-    auto s = d.calculateNearestNeighbors();
+    auto& s = d.calculateNearestNeighbors();
     REQUIRE(s[0].getNearestNeighborIndex() == 1);
     REQUIRE(s[1].getNearestNeighborIndex() == 0);
     REQUIRE(s[2].getNearestNeighborIndex() == 0);
