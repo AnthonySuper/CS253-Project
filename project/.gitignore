@@ -3,6 +3,7 @@ bin/*
 obj/*
 PA3
 PA4
+PA5
 test
 test_out
 .DS_Store

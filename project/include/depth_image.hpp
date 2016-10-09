@@ -1,22 +1,26 @@
 #ifndef DEPTH_IMAGE_HPP
 #define DEPTH_IMAGE_HPP
-#include <pgm_image.hpp>
 #include <histogram.hpp>
 #include <stdexcept>
+#include <string>
 #include <vector>
+#include <istream>
+#include <fstream>
+#include <sstream>
 
 class DepthImage {
-    public:
-    DepthImage(const PgmImage& img);
-    DepthImage(PgmImage&& img);
+public:
+    DepthImage(std::string filename);
     DepthImage(DepthImage &&o);
-    DepthImage(DepthImage &o) = default;
+    DepthImage(const DepthImage &o);
     double minimumSumComparison(const DepthImage&) const;
     inline int getHeight() const { return height; }
     inline int getWidth() const { return width; }
     inline const std::vector<int>& getPixelData() const { return pixelData; }
     inline const Histogram& getHistogram() const { return histogram; }
-    protected:
+    inline const std::string& getFileName() const { return fileName; }
+protected:
+    std::string fileName;
     int height;
     int width;
     std::vector<int> pixelData;

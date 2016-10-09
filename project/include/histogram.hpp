@@ -2,26 +2,32 @@
 #define HISTOGRAM_HPP
 #include <iostream>
 #include <fstream>
-#include <vector>
+#include <array>
 #include <string>
 #include <numeric>
-#include <iterator>
 #include <cmath>
+#include <vector>
 #include <errors.hpp>
 
 /**
  * Read a list of integers between 0 and 255, and does some basic stats on them.
  */
 class Histogram {
+
 public:
+    static constexpr size_t binCount = 64;
+    using BinType = std::array<int, binCount>;
+    using NormalizedBinType = std::array<double, binCount>;
+
     Histogram(const std::vector<int> &list);
+    Histogram(const Histogram& h1, const Histogram &h2);
     Histogram();
 
     void printStemAndLeaf() const;
 
-    inline std::vector<int> getBins() const { return bins; }
+    inline const BinType& getBins() const { return bins; }
 
-    inline std::vector<double> getNormalizedBins() const {
+    inline const NormalizedBinType& getNormalizedBins() const {
         return normalizedBins;
     }
 
@@ -31,9 +37,8 @@ public:
                
 
     private:
-    std::vector<int> bins;
-    std::vector<double> normalizedBins;
-    static const size_t binCount = 64;
+    BinType bins;
+    NormalizedBinType normalizedBins;
 };
 
 #endif

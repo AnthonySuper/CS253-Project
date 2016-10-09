@@ -7,14 +7,29 @@ inline void numberCheck(int q) {
 }
 
 Histogram::Histogram() :
-    bins(binCount, 0),
-    normalizedBins(binCount, 0)
+    bins{},
+    normalizedBins{}
 {}
 
+Histogram::Histogram(const Histogram& h1, const Histogram &h2) :
+    bins{},
+    normalizedBins{}
+{
+    auto bins1 = h1.getBins();
+    auto bins2 = h2.getBins();
+    auto numNumbers = 0;
+    for(unsigned int i = 0; i < binCount; ++i) {
+        bins[i] = bins1[i] + bins2[i];
+        numNumbers += (bins1[i] + bins2[i]);
+    }
+    for(unsigned int i = 0; i < binCount; ++i) {
+        normalizedBins[i] = bins[i] / (double) numNumbers;
+    }
+}
 
 Histogram::Histogram(const std::vector<int> &numbers) : 
-    bins(binCount, 0), 
-    normalizedBins(binCount, 0) 
+    bins{},
+    normalizedBins{}
 {
     for(auto q: numbers) {
         numberCheck(q);

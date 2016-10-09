@@ -3,7 +3,6 @@
 #include <fstream>
 #include <vector>
 #include <depth_image.hpp>
-#include <pgm_image.hpp>
 #include <limits>
 
 class DepthImageList;
@@ -11,8 +10,8 @@ class DepthImageList;
 class DepthImageListItem {
     friend class DepthImageList;
     public:
+        DepthImageListItem(std::string fname);
         DepthImageListItem(DepthImage i, std::string fname);
-        DepthImageListItem(const PgmImage&&, std::string fname);
         DepthImage img;
         const std::string filename;
         inline int getNearestNeighborIndex() const {

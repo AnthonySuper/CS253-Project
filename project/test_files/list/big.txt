@@ -1,5 +1,5 @@
 test_files/pgm/quad_a.pgm
 test_files/pgm/quad_b.pgm
-test_files/pgm/quad_c.pgm
 test_files/pgm/quad_d.pgm
+test_files/pgm/quad_c.pgm
 test_files/pgm/quad_e.pgm

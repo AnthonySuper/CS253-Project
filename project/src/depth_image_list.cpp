@@ -1,5 +1,4 @@
 #include <depth_image_list.hpp>
-
 DepthImageList DepthImageList::fromFile(std::string filename) {
     std::ifstream f{filename};
     if(! f.is_open()) {
@@ -8,11 +7,20 @@ DepthImageList DepthImageList::fromFile(std::string filename) {
     DepthImageList list;
     std::string fname("");
     while(! f.eof() && f >> fname) {
-        PgmImage i{fname};
-        list.list.emplace_back(std::move(i), fname);
+      list.list.emplace_back(fname);
     }
     return list;
 }
+
+DepthImageListItem::DepthImageListItem(std::string n) :
+    img(n),
+    filename(n)
+{}
+
+DepthImageListItem::DepthImageListItem(DepthImage i, std::string fname) :
+    img(i),
+    filename(fname)
+{}
 
 const std::vector<DepthImageList::Item>& 
 DepthImageList::calculateNearestNeighbors() {
@@ -38,12 +46,4 @@ DepthImageList::calculateNearestNeighbors() {
 }
 
 
-DepthImageListItem::DepthImageListItem(DepthImage i, std::string fname) :
-    img(i),
-    filename(fname)
-{}
 
-DepthImageListItem::DepthImageListItem(const PgmImage&& r, std::string fname) :
-    img(r),
-    filename(fname)
-{}
