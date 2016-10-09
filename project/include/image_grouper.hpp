@@ -5,6 +5,7 @@
 #include <image_dataset.hpp>
 #include <errors.hpp>
 #include <cassert>
+#include <sstream>
 #include <tuple>
 #include <histogram.hpp>
 
@@ -16,12 +17,17 @@ public:
     ImageGrouper(shared_ptr<ImageDataset>);
     void reduceToGroupCount(int count);
 
+    explicit operator std::string() const;
+    friend std::ostream& operator<<(std::ostream& os, const ImageGrouper&);
+
     class Group {
     public:
         Group(unsigned int index, shared_ptr<ImageDataset>);
         Group(const Group& g1, const Group& g2);
 
         void merge(const Group& other);
+
+        explicit operator std::string() const;
 
         inline const vector<unsigned int>& getIndexes() const {
             return indexes;
@@ -62,5 +68,10 @@ protected:
     vector<Group> groups;
     shared_ptr<ImageDataset> dataset;
 };
+
+inline std::ostream& operator<<(std::ostream& os, 
+        const ImageGrouper::Group &g) {
+    return os << (std::string) g;
+}
 
 #endif

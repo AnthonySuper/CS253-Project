@@ -17,7 +17,7 @@ $(TARGET): main.cpp $(OBJECTS)
 
 .PHONY: clean docs
 
-all: $(OBJDIR) $(TARGET) $(TESTTARGET) $(OBJS)
+all: $(OBJDIR) $(TARGET) $(TESTTARGET)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@mkdir -p $(OBJDIR)

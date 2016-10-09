@@ -19,6 +19,7 @@ public:
     inline const std::vector<int>& getPixelData() const { return pixelData; }
     inline const Histogram& getHistogram() const { return histogram; }
     inline const std::string& getFileName() const { return fileName; }
+    explicit operator std::string() const;
 protected:
     std::string fileName;
     int height;
@@ -26,4 +27,10 @@ protected:
     std::vector<int> pixelData;
     Histogram histogram;
 };
+
+inline std::ostream& operator<<(std::ostream& os, const DepthImage& i) {
+    os << (std::string) i;
+    return os;
+}
+
 #endif

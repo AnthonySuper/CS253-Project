@@ -8,7 +8,8 @@ static void depthError(int in) {
 
 
 DepthImage::DepthImage(std::string filename) :
-fileName(filename) {
+    fileName(filename) 
+{
     std::ifstream f(filename);
     f >> std::noskipws;
     int maxValue;
@@ -72,8 +73,12 @@ DepthImage::DepthImage(const DepthImage &o) :
     histogram(o.histogram)
 {}
 
-
-
+DepthImage::operator std::string() const  {
+    std::stringstream s;
+    s << "DepthImage{height: " << height << ", width: " << width;
+    s << ", fileName: \"" << fileName << "\"}";
+    return s.str();
+}
 
 double DepthImage::minimumSumComparison(const DepthImage& o) const {
     return histogram.minimumSum(o.histogram);

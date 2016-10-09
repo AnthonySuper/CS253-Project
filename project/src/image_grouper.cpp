@@ -8,6 +8,27 @@ ImageGrouper::Group::Group(unsigned int index, shared_ptr<ImageDataset> ds) :
     hist = ds->at(index).getHistogram();
 }
 
+ImageGrouper::Group::operator std::string() const {
+    std::stringstream ss;
+    for(auto i: indexes) {
+        ss << ds->at(i).getFileName() << '\t';
+    }
+    return ss.str();
+}
+
+ImageGrouper::operator std::string() const {
+    std::stringstream ss;
+    ss << *this;
+    return ss.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const ImageGrouper& ig) {
+    for(auto &g: ig.groups) {
+        os << g << std::endl;
+    }
+    return os;
+}
+
 ImageGrouper::Group::Group(const Group& g1, const Group& g2) :
     ds(g1.getDataset()),
     hist(g1.getHistogram(), g2.getHistogram())
