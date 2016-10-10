@@ -19,6 +19,7 @@ public:
 
     static ptr_type fromFile(std::string fname);
     void emplace_back(std::string fname);
+    void emplace_back(const DepthImage& img);
     const DepthImage& at(int index);
     size_t size() {
         return images.size();

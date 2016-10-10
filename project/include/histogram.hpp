@@ -16,7 +16,13 @@ class Histogram {
 
 public:
     static constexpr size_t binCount = 64;
+    /**
+     * The type of the array of binned values we use.
+     */
     using BinType = std::array<int, binCount>;
+    /**
+     * The type of the array of NormalizedBinValues we use.
+     */
     using NormalizedBinType = std::array<double, binCount>;
 
     Histogram(const std::vector<int> &list);

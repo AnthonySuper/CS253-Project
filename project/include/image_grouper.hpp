@@ -42,29 +42,30 @@ public:
         }
 
     protected:
+        inline void resetSimilarity() {
+            nearestIndex = -1;
+            nearestSimilarity = -1;
+        }
+        void compareSimilarity(int index, double sim);
         vector<unsigned int> indexes;
         shared_ptr<ImageDataset> ds;
         Histogram hist;
+        int nearestIndex = -1;
+        double nearestSimilarity = -1;
+        // this is a friend because it needs to see certain parts of
+        // our internal representation. 
+        friend class ImageGrouper;
     };
 
     inline const std::vector<Group>& getGroups() {
         return groups;
     }
 protected:
-    struct GroupHelper {
-        int nearestNeighborIndex = -1;
-        double nearestNeighborSimilarity = -1;
-        inline void reset() {
-            nearestNeighborIndex = -1;
-            nearestNeighborSimilarity = -1;
-        }
-    };
     void mergeGroups(int first, int second);
     int getClosestGroupIndex();
     void calculateNearestNeighbor(int baseIndex, int startingIndex = 0);
     void calculateNearestNeighbors();
     void mergeClosetGroups();
-    vector<GroupHelper> groupInfo;
     vector<Group> groups;
     shared_ptr<ImageDataset> dataset;
 };

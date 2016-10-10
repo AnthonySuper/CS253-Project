@@ -18,6 +18,10 @@ void ImageDataset::emplace_back(std::string fname) {
     images.emplace_back(fname);
 }
 
+void ImageDataset::emplace_back(const DepthImage& img) {
+    images.emplace_back(img);
+}
+
 const DepthImage& ImageDataset::at(int index) {
     return images.at(index);
 }

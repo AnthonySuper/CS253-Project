@@ -46,11 +46,19 @@ ImageGrouper::Group::Group(const Group& g1, const Group& g2) :
 }
 
 void ImageGrouper::Group::merge(const Group& other) {
+    resetSimilarity();
     auto otherIndexes = other.getIndexes();
     for(auto i: otherIndexes) {
         indexes.emplace_back(i);
     }
     hist = Histogram(hist, other.getHistogram());
+}
+
+void ImageGrouper::Group::compareSimilarity(int i, double sim) {
+    if(sim > nearestSimilarity) {
+        nearestSimilarity = sim;
+        nearestIndex = i;
+    }
 }
 
 ImageGrouper::ImageGrouper(std::shared_ptr<ImageDataset> ds) :
@@ -63,12 +71,10 @@ ImageGrouper::ImageGrouper(std::shared_ptr<ImageDataset> ds) :
 }
 
 void ImageGrouper::reduceToGroupCount(int count) {
-    if((unsigned int) count > groups.size() || count < 0) {
+    if((unsigned int) count > groups.size() || count <= 0) {
         throw std::invalid_argument("Count is too large or negative");
     }
-    if(groupInfo.size() == 0) {
-        calculateNearestNeighbors();
-    }
+    calculateNearestNeighbors();
     while(groups.size() > (unsigned int) count) {
         mergeClosetGroups();
     }
@@ -79,43 +85,41 @@ void ImageGrouper::mergeGroups(int first, int second) {
     auto &secondGroup = groups.at(second);
     firstGroup.merge(secondGroup);
     groups.erase(groups.begin() + second);
-    groupInfo.erase(groupInfo.begin() + second);
     // Now we must recalcuate some things
     // For one, the indexes after second have all moved to the left one
     // So let's move them
-    for(auto info: groupInfo) {
-        if(info.nearestNeighborIndex > second) {
-            info.nearestNeighborIndex -= 1;
+    for(auto &g: groups) {
+        if(g.nearestIndex > second) {
+            g.nearestIndex -= 1;
         }
     }
     // Now move some other crap over
-    for(unsigned int i = 0; i < groupInfo.size(); ++i) {
-        auto& info = groupInfo.at(i);
-        if(info.nearestNeighborIndex == first ||
-                info.nearestNeighborIndex == second) {
-            info.reset();
+    for(unsigned int i = 0; i < groups.size(); ++i) {
+        auto& group = groups.at(i);
+        if(group.nearestIndex == first ||
+                group.nearestIndex == second) {
+            group.resetSimilarity();
             calculateNearestNeighbor(i);
         }
     }
-    groupInfo.at(first).reset();
     calculateNearestNeighbor(first);
 }
 
 void ImageGrouper::mergeClosetGroups() {
-    int closest = getClosestGroupIndex();
-    auto info = groupInfo[closest];
-    auto first = std::min(closest, info.nearestNeighborIndex);
-    auto second = std::max(closest, info.nearestNeighborIndex);
+    int closestIndex = getClosestGroupIndex();
+    auto group = groups[closestIndex];
+    auto first = std::min(closestIndex, group.nearestIndex);
+    auto second = std::max(closestIndex, group.nearestIndex);
     mergeGroups(first, second);
 }
 
 int ImageGrouper::getClosestGroupIndex() {
     double largestSim = -1;
     int currentClosest = 0;
-    for(unsigned int i = 0; i < groupInfo.size(); ++i) {
-        auto g = groupInfo[i];
-        if(g.nearestNeighborSimilarity > largestSim) {
-            largestSim = g.nearestNeighborSimilarity;
+    for(unsigned int i = 0; i < groups.size(); ++i) {
+        auto g = groups[i];
+        if(g.nearestSimilarity > largestSim) {
+            largestSim = g.nearestSimilarity;
             currentClosest = i;
         }
     }
@@ -123,41 +127,28 @@ int ImageGrouper::getClosestGroupIndex() {
 }
 
 void ImageGrouper::calculateNearestNeighbors() {
-    groupInfo.resize(groups.size());
-    for(unsigned int i = 0; i < groupInfo.size(); ++i) {
+    for(auto& g: groups) {
+        g.resetSimilarity();
+    }
+    for(unsigned int i = 0; i < groups.size(); ++i) {
         calculateNearestNeighbor(i, i + 1);
     }
 }
 
 
 void ImageGrouper::calculateNearestNeighbor(int base, int start) {
-    auto& info = groupInfo.at(base);
-    const auto &group = groups.at(base);
+    auto& group = groups.at(base);
     for(unsigned int i = static_cast<unsigned int>(start); 
-            i < groupInfo.size(); 
+            i < groups.size();
             ++i) {
-        // Don't bother to re-check histograms against our current nearest
-        if(info.nearestNeighborIndex == static_cast<int>(i)) {
+        // Don't compare against ourselves or our current nearest
+        if(static_cast<unsigned int>(group.nearestIndex) == i
+                || static_cast<unsigned int>(base) == i) {
             continue;
         }
-        // dont' check against ourselves
-        if(static_cast<unsigned int>(base) == i) {
-            continue;
-        }
-        // get secondary info
-        auto &info2 = groupInfo.at(i);
-        // get secondary group
-        const auto &group2 = groups.at(i);
+        auto &group2 = groups.at(i);
         double sim = group.getHistogram().minimumSum(group2.getHistogram());
-        // if we are closer to this group
-        if(sim > info.nearestNeighborSimilarity) {
-            info.nearestNeighborIndex = i;
-            info.nearestNeighborSimilarity = sim;
-        }
-        // if they are closer to this group
-        if(sim > info2.nearestNeighborSimilarity) {
-            info2.nearestNeighborIndex = base;
-            info2.nearestNeighborSimilarity = sim;
-        }
+        group.compareSimilarity(i, sim);
+        group2.compareSimilarity(base, sim);
     }
 }

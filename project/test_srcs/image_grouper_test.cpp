@@ -1,5 +1,7 @@
 #include <catch.hpp>
 #include <image_grouper.hpp>
+#include <set>
+#include <stdexcept>
 
 TEST_CASE("ImageGrouper holds images", "[ImageGrouper]") {
     auto f = ImageDataset::fromFile("test_files/list/big.txt");
@@ -45,11 +47,21 @@ TEST_CASE("ImageGrouper groups images", "[ImageGrouper]") {
         REQUIRE(nb[2] == Approx(0.083333333333));
     }
 
+    SECTION("It merges into one properly") {
+        g.reduceToGroupCount(1);
+        REQUIRE(g.getGroups().size() == 1);
+        auto& indexes = g.getGroups()[0].getIndexes();
+        std::set<int> s(indexes.begin(), indexes.end());
+        for(int i = 0; i < f->size(); ++i) {
+            REQUIRE(s.find(i) != s.end());;
+        }
+    }
+
     SECTION("It breaks on negative reduction") {
-        REQUIRE_THROWS(g.reduceToGroupCount(-10));
+        REQUIRE_THROWS_AS(g.reduceToGroupCount(-10), std::invalid_argument);
     }
 
     SECTION("It breaks on reduction larger than max size") {
-        REQUIRE_THROWS(g.reduceToGroupCount(1000));
+        REQUIRE_THROWS_AS(g.reduceToGroupCount(1000), std::invalid_argument);
     }
 }
