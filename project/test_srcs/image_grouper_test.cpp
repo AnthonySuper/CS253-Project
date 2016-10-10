@@ -20,17 +20,31 @@ TEST_CASE("ImageGrouper groups images", "[ImageGrouper]") {
     }
 
     SECTION("It merges properly initially") {
-        g.reduceToGroupCount(4);
-        REQUIRE(g.getGroups().size() == 4);
+        g.reduceToGroupCount(5);
+        REQUIRE(g.getGroups().size() == 5);
         auto indexes = g.getGroups()[0].getIndexes();
         REQUIRE(indexes.size() == 2);
-        REQUIRE(indexes[0] == 0);
-        REQUIRE(indexes[1] == 1);
-        REQUIRE(indexes[0] != indexes[1]);
+        std::set<int> real{indexes.begin(), indexes.end()};
+        std::set<int> desired{0, 1};
+        REQUIRE(desired == real);
         auto &nb = g.getGroups()[0].getHistogram().getNormalizedBins();
         REQUIRE(nb[0] == 0.75);
         REQUIRE(nb[1] == 0.125);
         REQUIRE(nb[2] == 0.125);
+    }
+
+    SECTION("It merges groups based on closest distances") {
+        g.reduceToGroupCount(3);
+        REQUIRE(g.getGroups().size() == 3);
+        auto indexes1 = g.getGroups()[0].getIndexes();
+        REQUIRE(indexes1.size() == 3);
+        std::set<int> real1{indexes1.begin(), indexes1.end()};
+        std::set<int> desired1{0, 1, 2};
+        REQUIRE(real1 == desired1);
+        auto indexes2 = g.getGroups()[1].getIndexes();
+        std::set<int> real2{indexes2.begin(), indexes2.end()};
+        std::set<int> desired2{3, 5};
+        REQUIRE(real2 == desired2);
     }
 
     SECTION("It merges multiple units properly") {
