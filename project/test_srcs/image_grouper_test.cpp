@@ -54,7 +54,7 @@ TEST_CASE("ImageGrouper groups images", "[ImageGrouper]") {
         auto indexes = group.getIndexes();
         REQUIRE(indexes[0] == 0);
         REQUIRE(indexes[1] == 1);
-        REQUIRE(indexes[2] == 3);
+        REQUIRE(indexes[2] == 2);
         auto &nb = group.getHistogram().getNormalizedBins();
         REQUIRE(nb[0] == Approx(0.833333333333));
         REQUIRE(nb[1] == Approx(0.083333333333));
