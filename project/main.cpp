@@ -14,9 +14,6 @@ int main(int argc, char *argv[]) {
     try {
         auto d = ImageDataset::fromFile(argv[1]);
         int i = std::stoi(argv[2]);
-        if(i < 1 || i > d->size()) {
-            throw std::runtime_error{"Cannot make that many groups"};
-        }
         auto groups = ImageGrouper(d);
         groups.reduceToGroupCount(i);
         std::cout << groups << std::endl;

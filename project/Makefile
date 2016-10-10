@@ -1,7 +1,7 @@
 OBJDIR := ./obj
 SRCDIR := ./src
 TESTDIR := ./test_srcs
-CXXFLAGS := -Iinclude -std=c++14 -Wall
+CXXFLAGS := -Iinclude -std=c++14 -Wall -g
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTSRCS := $(wildcard $(TESTDIR)/*.cpp)

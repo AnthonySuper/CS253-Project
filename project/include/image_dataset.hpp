@@ -34,7 +34,6 @@ public:
 protected:
     ImageDataset() = default;
     std::vector<DepthImage> images;
-    friend ptr_type ImageDataset::fromFile(std::string);
 };
 
 #endif

@@ -57,16 +57,19 @@ ImageGrouper::ImageGrouper(std::shared_ptr<ImageDataset> ds) :
   dataset(ds) {
     assert(ds != nullptr);
     groups.reserve(dataset->size());
-    for(int i = 0; i < dataset->size(); ++i) {
+    for(unsigned int i = 0; i < dataset->size(); ++i) {
         groups.emplace_back(i, dataset);
     }
 }
 
 void ImageGrouper::reduceToGroupCount(int count) {
+    if((unsigned int) count > groups.size() || count < 0) {
+        throw std::invalid_argument("Count is too large or negative");
+    }
     if(groupInfo.size() == 0) {
         calculateNearestNeighbors();
     }
-    while(groups.size() > count) {
+    while(groups.size() > (unsigned int) count) {
         mergeClosetGroups();
     }
 }
@@ -109,7 +112,7 @@ void ImageGrouper::mergeClosetGroups() {
 int ImageGrouper::getClosestGroupIndex() {
     double largestSim = -1;
     int currentClosest = 0;
-    for(int i = 0; i < groupInfo.size(); ++i) {
+    for(unsigned int i = 0; i < groupInfo.size(); ++i) {
         auto g = groupInfo[i];
         if(g.nearestNeighborSimilarity > largestSim) {
             largestSim = g.nearestNeighborSimilarity;
@@ -121,7 +124,7 @@ int ImageGrouper::getClosestGroupIndex() {
 
 void ImageGrouper::calculateNearestNeighbors() {
     groupInfo.resize(groups.size());
-    for(int i = 0; i < groupInfo.size(); ++i) {
+    for(unsigned int i = 0; i < groupInfo.size(); ++i) {
         calculateNearestNeighbor(i, i + 1);
     }
 }
@@ -138,7 +141,7 @@ void ImageGrouper::calculateNearestNeighbor(int base, int start) {
             continue;
         }
         // dont' check against ourselves
-        if(base == i) {
+        if(static_cast<unsigned int>(base) == i) {
             continue;
         }
         // get secondary info

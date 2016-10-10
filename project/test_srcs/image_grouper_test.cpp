@@ -44,4 +44,12 @@ TEST_CASE("ImageGrouper groups images", "[ImageGrouper]") {
         REQUIRE(nb[1] == Approx(0.083333333333));
         REQUIRE(nb[2] == Approx(0.083333333333));
     }
+
+    SECTION("It breaks on negative reduction") {
+        REQUIRE_THROWS(g.reduceToGroupCount(-10));
+    }
+
+    SECTION("It breaks on reduction larger than max size") {
+        REQUIRE_THROWS(g.reduceToGroupCount(1000));
+    }
 }
