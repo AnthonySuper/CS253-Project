@@ -22,9 +22,9 @@ public:
     struct GroupHelper {
         int nearestIndex = -1;
         double nearestSimilarity = -1;
-        unique_ptr<ImageGroup> group;
-        GroupHelper(unique_ptr<ImageGroup> g) :
-            group(std::move(g)) {}
+        shared_ptr<ImageGroup> group;
+        GroupHelper(shared_ptr<ImageGroup> g) :
+            group(g) {}
         GroupHelper(ImageGroup *g) :
             group(g) {}
         inline void resetSimilarity() {
@@ -39,6 +39,7 @@ public:
         }
     };
 
+    std::vector<std::shared_ptr<ImageGroup>> getGroups() const;
 
 protected:
     void mergeGroups(int first, int second);

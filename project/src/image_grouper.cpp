@@ -39,6 +39,15 @@ void ImageGrouper::mergeGroups(int first, int second) {
     }
 }
 
+std::vector<std::shared_ptr<ImageGroup>> ImageGrouper::getGroups() const {
+    std::vector<std::shared_ptr<ImageGroup>> tmp;
+    tmp.reserve(groups.size());
+    for(auto g: groups) {
+        tmp.emplace_back(g.group);
+    }
+    return tmp;
+}
+
 void ImageGrouper::mergeClosetGroups() {
     int closestIndex = getClosestGroupIndex();
     auto& group = groups[closestIndex];
