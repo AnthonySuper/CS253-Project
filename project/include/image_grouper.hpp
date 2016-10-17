@@ -3,76 +3,54 @@
 #include <memory>
 #include <vector>
 #include <image_dataset.hpp>
+#include <image_group.hpp>
 #include <errors.hpp>
 #include <cassert>
 #include <sstream>
 #include <tuple>
-#include <histogram.hpp>
 
 using std::shared_ptr;
+using std::unique_ptr;
 using std::vector;
 
 class ImageGrouper {
 public:
-    ImageGrouper(shared_ptr<ImageDataset>);
+    ImageGrouper(shared_ptr<ImageDataset>, ImageGroup::Factory*);
     void reduceToGroupCount(int count);
+    friend std::ostream& operator<<(std::ostream &os, const ImageGrouper& g);
 
-    explicit operator std::string() const;
-    friend std::ostream& operator<<(std::ostream& os, const ImageGrouper&);
-
-    class Group {
-    public:
-        Group(unsigned int index, shared_ptr<ImageDataset>);
-        Group(const Group& g1, const Group& g2);
-
-        void merge(const Group& other);
-
-        explicit operator std::string() const;
-
-        inline const vector<unsigned int>& getIndexes() const {
-            return indexes;
-        }
-
-        inline const shared_ptr<ImageDataset> getDataset() const {
-            return ds;
-        }
-
-        inline const Histogram& getHistogram() const {
-            return hist;
-        }
-
-    protected:
+    struct GroupHelper {
+        int nearestIndex = -1;
+        double nearestSimilarity = -1;
+        unique_ptr<ImageGroup> group;
+        GroupHelper(unique_ptr<ImageGroup> g) :
+            group(std::move(g)) {}
+        GroupHelper(ImageGroup *g) :
+            group(g) {}
         inline void resetSimilarity() {
             nearestIndex = -1;
             nearestSimilarity = -1;
         }
-        void compareSimilarity(int index, double sim);
-        vector<unsigned int> indexes;
-        shared_ptr<ImageDataset> ds;
-        Histogram hist;
-        int nearestIndex = -1;
-        double nearestSimilarity = -1;
-        // this is a friend because it needs to see certain parts of
-        // our internal representation. 
-        friend class ImageGrouper;
+        inline void compareSimilarity(int indx, double sim) {
+            if(sim > nearestSimilarity) {
+                nearestSimilarity = sim;
+                nearestIndex = indx;
+            }
+        }
     };
 
-    inline const std::vector<Group>& getGroups() {
-        return groups;
-    }
+
 protected:
     void mergeGroups(int first, int second);
     int getClosestGroupIndex();
+    void compareSimilarity(int start, int end);
     void calculateNearestNeighbor(int baseIndex, int startingIndex = 0);
     void calculateNearestNeighbors();
     void mergeClosetGroups();
-    vector<Group> groups;
+    vector<GroupHelper> groups;
     shared_ptr<ImageDataset> dataset;
 };
 
-inline std::ostream& operator<<(std::ostream& os, 
-        const ImageGrouper::Group &g) {
-    return os << (std::string) g;
-}
+std::ostream& operator<<(std::ostream&,const ImageGroup&);
 
 #endif

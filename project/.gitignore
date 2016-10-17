@@ -4,6 +4,8 @@ obj/*
 PA3
 PA4
 PA5
+PA6
+*.dSYM
 test
 test_out
 .DS_Store
