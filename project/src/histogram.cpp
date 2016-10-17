@@ -65,3 +65,7 @@ double Histogram::minimumSum(const Histogram &other) const {
     }
     return accum;
 }
+
+bool Histogram::operator==(const Histogram&o) const {
+    return (bins == o.bins && normalizedBins == o.normalizedBins);
+}

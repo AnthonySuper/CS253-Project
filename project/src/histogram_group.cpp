@@ -4,10 +4,17 @@ ImageGroup* HistogramGroup::Factory::create(Dataset ds, unsigned int idx) {
     return new HistogramGroup(ds, idx);
 }
 
-HistogramGroup::HistogramGroup(Dataset ds, unsigned int idx) :
-    hist(ds->at(idx).getHistogram()) {
-        dataset = ds;
-        indexes = {idx};
+HistogramGroup::HistogramGroup(Dataset ds, unsigned int idx)
+{
+    if(ds == nullptr) {
+        throw std::invalid_argument("Dataset cannot be null");
+    }
+    if(idx >= ds->size()) {
+        throw std::range_error("That index is not present in the dataset");
+    }
+    hist = ds->at(idx).getHistogram();
+    dataset = ds;
+    indexes = {idx};
 }
 
 HistogramGroup::HistogramGroup(const ImageGroup& o) {

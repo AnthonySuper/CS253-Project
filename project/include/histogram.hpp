@@ -70,8 +70,13 @@ public:
      * Note that this is equivalent to the intersection of the two histograms.
      */
     double minimumSum(const Histogram &other) const;
+
+    /**
+     * See if two histograms are exactly the same
+     */
+    bool operator==(const Histogram&o) const;
                
-    private:
+protected:
     BinType bins;
     NormalizedBinType normalizedBins;
 };
