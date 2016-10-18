@@ -1,48 +1,44 @@
 #include <histogram_group.hpp>
 
-ImageGroup* HistogramGroup::Factory::create(Dataset ds, unsigned int idx) {
-    return new HistogramGroup(ds, idx);
+ImageGroup* HistogramGroup::Factory::create(std::shared_ptr<DepthImage> i) {
+    return new HistogramGroup(i);
 }
 
-HistogramGroup::HistogramGroup(Dataset ds, unsigned int idx)
+HistogramGroup::HistogramGroup(std::shared_ptr<DepthImage> img)
 {
-    if(ds == nullptr) {
-        throw std::invalid_argument("Dataset cannot be null");
+    if(img == nullptr) {
+        throw std::invalid_argument("Cannot pass a nullptr to an imagegroup");
     }
-    if(idx >= ds->size()) {
-        throw std::range_error("That index is not present in the dataset");
-    }
-    hist = ds->at(idx).getHistogram();
-    dataset = ds;
-    indexes = {idx};
+    images = {img};
+    hist = img->getHistogram();
 }
 
 HistogramGroup::HistogramGroup(const ImageGroup& o) {
-    if(o.getIndexes().size() == 0) {
+    if(o.getImages().size() == 0) {
 
     }
     else {
-        indexes = o.getIndexes();
-        Histogram tmp = dataset->at(0).getHistogram();
-        for(int i = 1; i < o.getIndexes().size(); i++) {
-            tmp = Histogram(tmp, dataset->at(i).getHistogram());
+        images = o.getImages();
+        Histogram tmp = images.at(0)->getHistogram();
+        for(int i = 1; i < images.size(); i++) {
+            tmp = Histogram(tmp, images.at(i)->getHistogram());
         }
         hist = tmp;
     }
 }
 
 void HistogramGroup::merge(ImageGroup &other) {
-    std::vector<unsigned int> q = other.getIndexes();
-    indexes.insert(indexes.end(),q.begin(), q.end());
+    auto imgs = other.getImages();
+    images.insert(images.end(), imgs.begin(), imgs.end());
     ImageGroup &ig = *this;
     if(typeid(ig) == typeid(other)) {
         HistogramGroup &hs = static_cast<HistogramGroup&>(other);
         hist = Histogram(hist, hs.hist);
     }
     else {
-        Histogram tmp(dataset->at(0).getHistogram());
-        for(int i = 1; i < indexes.size(); i++) {
-            tmp = Histogram(tmp, dataset->at(i).getHistogram());
+        Histogram tmp(imgs.at(0)->getHistogram());
+        for(int i = 1; i < imgs.size(); i++) {
+            tmp = Histogram(tmp, imgs.at(i)->getHistogram());
         }
         hist = tmp;
     }

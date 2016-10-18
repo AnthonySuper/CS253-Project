@@ -15,7 +15,7 @@ using std::vector;
 
 class ImageGrouper {
 public:
-    ImageGrouper(shared_ptr<ImageDataset>, ImageGroup::Factory*);
+    ImageGrouper(ImageDataset, ImageGroup::Factory*);
     void reduceToGroupCount(int count);
     friend std::ostream& operator<<(std::ostream &os, const ImageGrouper& g);
 
@@ -49,7 +49,6 @@ protected:
     void calculateNearestNeighbors();
     void mergeClosetGroups();
     vector<GroupHelper> groups;
-    shared_ptr<ImageDataset> dataset;
 };
 
 std::ostream& operator<<(std::ostream&,const ImageGroup&);

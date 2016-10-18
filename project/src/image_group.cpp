@@ -1,8 +1,9 @@
 #include <image_group.hpp>
 
 std::ostream& operator<<(std::ostream& os, const ImageGroup& g) {
-    for(auto i: g.indexes) {
-        os << g.dataset->at(i).getFileName() << '\t';
+    auto images = g.getImages();
+    for(auto img: images) {
+        os << img->getFileName() << '\t';
     }
     return os;
 }

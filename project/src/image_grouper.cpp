@@ -1,13 +1,13 @@
 #include <image_grouper.hpp>
 
-ImageGrouper::ImageGrouper(std::shared_ptr<ImageDataset> ds,
-        ImageGroup::Factory *factory) :
-  dataset(ds) {
-    assert(ds != nullptr);
-    groups.reserve(dataset->size());
-    for(unsigned int i = 0; i < dataset->size(); ++i) {
-        ImageGroup *g = factory->create(ds, i);
-        groups.emplace_back(g);
+ImageGrouper::ImageGrouper(ImageDataset ds,
+        ImageGroup::Factory *factory)
+{
+    groups.reserve(ds.size());
+    auto images = ds.getImages();
+    for(auto img: images) {
+        std::shared_ptr<ImageGroup> p(factory->create(img));
+        groups.emplace_back(p);
     }
 }
 

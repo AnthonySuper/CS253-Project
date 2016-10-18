@@ -1,27 +1,26 @@
 #include <image_dataset.hpp>
 
-std::shared_ptr<ImageDataset> ImageDataset::fromFile(std::string fname) {
-    ImageDataset *p = new ImageDataset();
-    std::shared_ptr<ImageDataset> ds(p);
+ImageDataset ImageDataset::fromFile(std::string fname) {
+    ImageDataset ds;
     std::ifstream f{fname};
     if(! f.is_open()) {
         throw FileNotFoundError(fname);
     }
     std::string s;
     while(f.is_open() && f >> s) {
-        ds->emplace_back(s);
+        ds.emplace_back(s);
     }
     return ds;
 }
 
 void ImageDataset::emplace_back(std::string fname) {
-    images.emplace_back(fname);
+    images.emplace_back(std::make_shared<DepthImage>(fname));
 }
 
 void ImageDataset::emplace_back(const DepthImage& img) {
-    images.emplace_back(img);
+    images.emplace_back(std::make_shared<DepthImage>(img));
 }
 
-const DepthImage& ImageDataset::at(int index) {
+std::shared_ptr<DepthImage>ImageDataset::at(int index) {
     return images.at(index);
 }

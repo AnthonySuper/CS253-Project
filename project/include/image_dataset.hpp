@@ -15,26 +15,28 @@
  */
 class ImageDataset {
 public:
-    using ptr_type = std::shared_ptr<ImageDataset>;
+    using ImagePtr = std::shared_ptr<DepthImage>;
 
-    static ptr_type fromFile(std::string fname);
+    static ImageDataset fromFile(std::string fname);
+
     void emplace_back(std::string fname);
+
     void emplace_back(const DepthImage& img);
-    const DepthImage& at(int index);
+
+    ImagePtr at(int index);
+
     size_t size() {
         return images.size();
     }
 
-    std::vector<DepthImage>::const_iterator begin() const {
-        return images.begin();
+    const std::vector<ImagePtr>& getImages() const {
+        return images;
     }
 
-    std::vector<DepthImage>::const_iterator end() const {
-        return images.end();
-    }
-protected:
     ImageDataset() = default;
-    std::vector<DepthImage> images;
+
+protected:
+    std::vector<ImagePtr> images;
 };
 
 #endif

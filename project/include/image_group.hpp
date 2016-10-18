@@ -13,9 +13,10 @@
  */
 class ImageGroup {
 public:
-    using Dataset = std::shared_ptr<ImageDataset>;
+    using ImagePtr = std::shared_ptr<DepthImage>;
 
     friend std::ostream& operator<<(std::ostream&, const ImageGroup&);
+
     virtual ~ImageGroup();
     
     /**
@@ -35,17 +36,10 @@ public:
     virtual double similarityTo(ImageGroup&) = 0;
 
     /**
-     * Get the indexes of images that belong to this group.
+     * Get the images that belong to this group.
      */
-    inline std::vector<unsigned int> getIndexes() const {
-        return indexes;
-    }
-
-    /**
-     * Get the dataset that belongs to this group.
-     */
-    inline std::shared_ptr<ImageDataset> getDataset() const {
-        return dataset;
+    inline std::vector<ImagePtr> getImages() const {
+        return images;
     }
 
     /**
@@ -55,16 +49,13 @@ public:
     class Factory {
     public:
         /**
-         * Create a group given a single image, represented as a dataset
-         * and an index into it.
+         * Create a group given a single image.
          */
-        virtual ImageGroup* create(Dataset ds, unsigned int index) = 0;
+        virtual ImageGroup* create(ImagePtr) = 0;
     };
 
 protected:
-    std::vector<unsigned int> indexes;
-
-    std::shared_ptr<ImageDataset> dataset;
+    std::vector<ImagePtr> images;
 
     ImageGroup() {} 
 };

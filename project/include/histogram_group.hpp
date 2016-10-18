@@ -5,9 +5,12 @@
 
 class HistogramGroup : public ImageGroup {
 public:
-    HistogramGroup(Dataset ds, unsigned int idx);
+    HistogramGroup(std::shared_ptr<DepthImage> img);
+
     explicit HistogramGroup(const ImageGroup& other);
+
     virtual void merge(ImageGroup&) override;
+
     virtual double similarityTo(ImageGroup&) override;
 
     /**
@@ -16,7 +19,7 @@ public:
      */
     class Factory : public ImageGroup::Factory {
     public:
-        ImageGroup* create(Dataset ds, unsigned int index);
+        virtual ImageGroup* create(std::shared_ptr<DepthImage> img) override;
     };
 
     const Histogram& getHistogram() const {

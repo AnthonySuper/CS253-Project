@@ -4,19 +4,21 @@
 #include <stdexcept>
 #include <histogram_group.hpp>
 
+using IPtr = std::shared_ptr<DepthImage>;
+using ISet = std::set<IPtr>;
+
 TEST_CASE("ImageGrouper holds images", "[ImageGrouper]") {
     HistogramGroup::Factory fac;
     auto f = ImageDataset::fromFile("test_files/list/big.txt");
     ImageGrouper g{f, &fac};;
     auto groups = g.getGroups();
-    REQUIRE(groups.size() == f->size());
+    REQUIRE(groups.size() == f.size());
 }
 
 TEST_CASE("ImageGrouper groups images", "[ImageGrouper]") {
     HistogramGroup::Factory fac;
-    auto f = ImageDataset::fromFile("test_files/list/big.txt");
-    ImageGrouper g{f, &fac};
-
+    auto ds = ImageDataset::fromFile("test_files/list/big.txt");
+    ImageGrouper g{ds, &fac};
     SECTION("It reduces to the right size") {
         g.reduceToGroupCount(2);
         REQUIRE(g.getGroups().size() == 2);
@@ -25,44 +27,34 @@ TEST_CASE("ImageGrouper groups images", "[ImageGrouper]") {
     SECTION("It merges properly initially") {
         g.reduceToGroupCount(5);
         REQUIRE(g.getGroups().size() == 5);
-        auto indexes = g.getGroups()[0]->getIndexes();
-        REQUIRE(indexes.size() == 2);
-        std::set<int> real{indexes.begin(), indexes.end()};
-        std::set<int> desired{0, 1};
+        auto images = g.getGroups()[0]->getImages();
+        REQUIRE(images.size() == 2);
+        ISet real{images.begin(), images.end()};
+        ISet desired{ds.at(0), ds.at(1)};
         REQUIRE(desired == real);
     }
 
     SECTION("It merges groups based on closest distances") {
         g.reduceToGroupCount(3);
         REQUIRE(g.getGroups().size() == 3);
-        auto indexes1 = g.getGroups()[0]->getIndexes();
-        REQUIRE(indexes1.size() == 3);
-        std::set<int> real1{indexes1.begin(), indexes1.end()};
-        std::set<int> desired1{0, 1, 2};
+        auto images1 = g.getGroups()[0]->getImages();
+        REQUIRE(images1.size() == 3);
+        ISet real1{images1.begin(), images1.end()};
+        ISet desired1{ds.at(0), ds.at(1), ds.at(2)};
         REQUIRE(real1 == desired1);
-        auto indexes2 = g.getGroups()[1]->getIndexes();
-        std::set<int> real2{indexes2.begin(), indexes2.end()};
-        std::set<int> desired2{3, 5};
+        auto images2 = g.getGroups()[1]->getImages();
+        ISet real2{images2.begin(), images2.end()};
+        ISet desired2{ds.at(3), ds.at(5)};
         REQUIRE(real2 == desired2);
-    }
-
-    SECTION("It merges multiple units properly") {
-        g.reduceToGroupCount(3);
-        REQUIRE(g.getGroups().size() == 3);
-        auto group = g.getGroups()[0];
-        auto indexes = group->getIndexes();
-        REQUIRE(indexes[0] == 0);
-        REQUIRE(indexes[1] == 1);
-        REQUIRE(indexes[2] == 2);
     }
 
     SECTION("It merges into one properly") {
         g.reduceToGroupCount(1);
         REQUIRE(g.getGroups().size() == 1);
-        auto indexes = g.getGroups()[0]->getIndexes();
-        std::set<int> s(indexes.begin(), indexes.end());
-        for(int i = 0; i < f->size(); ++i) {
-            REQUIRE(s.find(i) != s.end());;
+        auto images = g.getGroups()[0]->getImages();
+        ISet s(images.begin(), images.end());
+        for(unsigned int i = 0; i < ds.size(); ++i) {
+            REQUIRE(s.find(ds.at(i)) != s.end());
         }
     }
 
