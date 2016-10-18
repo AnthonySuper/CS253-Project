@@ -29,7 +29,7 @@ HistogramGroup::HistogramGroup(const ImageGroup& o) {
 
 void HistogramGroup::merge(ImageGroup &other) {
     auto imgs = other.getImages();
-    images.insert(images.end(), imgs.begin(), imgs.end());
+    appendImages(imgs);
     ImageGroup &ig = *this;
     if(typeid(ig) == typeid(other)) {
         HistogramGroup &hs = static_cast<HistogramGroup&>(other);

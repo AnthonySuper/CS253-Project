@@ -14,5 +14,13 @@ ImageGroup::operator std::string() const {
     return ss.str();
 }
 
+void ImageGroup::appendImages(std::vector<ImagePtr> imgs) {
+    images.insert(images.end(), imgs.begin(), imgs.end());
+}
+
 ImageGroup::~ImageGroup() {
+}
+
+ImageGroup::Factory::~Factory() {
+
 }

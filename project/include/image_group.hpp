@@ -52,10 +52,13 @@ public:
          * Create a group given a single image.
          */
         virtual ImageGroup* create(ImagePtr) = 0;
+        virtual ~Factory();
     };
 
 protected:
     std::vector<ImagePtr> images;
+
+    void appendImages(std::vector<ImagePtr> images);
 
     ImageGroup() {} 
 };

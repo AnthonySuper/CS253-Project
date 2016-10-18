@@ -57,6 +57,8 @@ public:
      * of this DepthImage.
      */
     inline const std::vector<int>& getPixelData() const { return pixelData; }
+
+    std::vector<int> getSection(int x, int y, int height, int width);
     /**
      * Obtain a reference to the histogram made from this DepthImage
      */
