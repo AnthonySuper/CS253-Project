@@ -1,0 +1,7 @@
+test_files/given/pa5/class1_00003.pgm
+test_files/given/pa5/class1_00004.pgm
+test_files/given/pa5/class2_01521.pgm
+test_files/given/pa5/class3_00263.pgm
+test_files/given/pa5/class3_00264.pgm
+test_files/given/pa5/class4_00379.pgm
+test_files/given/pa5/class4_00380.pgm
