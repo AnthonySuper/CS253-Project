@@ -81,14 +81,16 @@ DepthImage::operator std::string() const  {
 }
 
 std::vector<int> DepthImage::getSection(int x, int y, int h, int w) {
-    if(x + w > width || y + h > height) {
+    if(x + w >= width || y + h >= height) {
         throw std::invalid_argument("out of bounds");
     }
     std::vector<int> fragment;
     fragment.reserve(h * w);
-    for(int i = 0; i < w; ++i) {
-        for(int j = 0; j < h; ++j) {
-            fragment.emplace_back(pixelData.at(x + i + width*(y + h)));
+    for(int i = 0; i < h; ++i) {
+        for(int j = 0; j < w; ++j) {
+            int yOffset = width*(i + y);
+            int xOffset = (j + x);
+            fragment.emplace_back(pixelData.at(yOffset + xOffset));
         }
     }
     return fragment;

@@ -6,9 +6,9 @@ ImageGroup* QuadGroup::Factory::create(std::shared_ptr<DepthImage> im) {
 
 QuadGroup::QuadGroup(std::shared_ptr<DepthImage> im) {
     auto vec_a = im->getSection(0, 0, 64, 64);
-    auto vec_b = im->getSection(64, 0, 64, 64);
-    auto vec_c = im->getSection(0, 64, 64, 64);
-    auto vec_d = im->getSection(64, 64, 64, 64);
+    auto vec_b = im->getSection(63, 0, 64, 64);
+    auto vec_c = im->getSection(0, 63, 64, 64);
+    auto vec_d = im->getSection(63, 63, 64, 64);
     quad_a = vec_a;
     quad_b = vec_b;
     quad_c = vec_c;

@@ -7,6 +7,7 @@
 #include <image_grouper.hpp>
 #include <histogram_group.hpp>
 #include <quad_group.hpp>
+#include <pixel_group.hpp>
 
 ImageGroup::Factory* getFactory(int idx) {
     if(idx == 1) {
@@ -15,6 +16,9 @@ ImageGroup::Factory* getFactory(int idx) {
     else if(idx == 2) {
         return new QuadGroup::Factory();
     }
+    else if(idx == 3) {
+        return new PixelGroup::Factory();
+    } 
     else {
         throw std::runtime_error("Index out of bounds!");
     }
