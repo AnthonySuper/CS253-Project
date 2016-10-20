@@ -49,12 +49,15 @@ void PixelGroup::merge(PixelGroup& p) {
     if(p.pixels.size() != pixels.size()) {
         throw std::invalid_argument("Sizes do not match");
     }
-    auto avgSize = images.size() + p.images.size();
+    auto ourWeight = images.size();
+    auto theirWeight = p.images.size();
+    auto avgSize = ourWeight + theirWeight;
     std::vector<double> tmp;
     tmp.reserve(expected_height * expected_width);
     auto& otherPixels = p.pixels;
     for(unsigned int i = 0; i < pixels.size(); i++) {
-        tmp[i] = (pixels[i] + otherPixels[i]) / avgSize;
+        auto sum = (pixels[i] * ourWeight) + (otherPixels[i] * theirWeight);
+        tmp[i] = (sum / avgSize);
     }
 }
 
