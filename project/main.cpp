@@ -40,13 +40,8 @@ int main(int argc, char *argv[]) {
         std::cout << groups << std::endl;
         delete f;
     }
-    catch(std::string &s) {
-    }
-    /*
     catch(const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        std::cerr << typeid(e).name() << std::endl;
+        std::cerr << typeid(e).name() << " " << e.what() << std::endl;
         return -1;
     }
-    */
 }
