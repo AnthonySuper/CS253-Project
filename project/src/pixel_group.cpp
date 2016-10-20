@@ -19,14 +19,14 @@ PixelGroup::PixelGroup(ImageGroup& g) {
     else {
         auto& imgPixels = imgs.at(0)->getPixelData();
         pixels = std::vector<double>(imgPixels.begin(), imgPixels.end());
-        for(int i = 1; i < imgs.size(); ++i) {
+        for(unsigned int i = 1; i < imgs.size(); ++i) {
             auto& ip = imgs[i]->getPixelData();
-            for(int j = 0; j < pixels.size(); ++j) {
+            for(unsigned int j = 0; j < pixels.size(); ++j) {
                 pixels[j] += ip[j];
             }
         }
         auto totalSize = imgs.size();
-        for(int i = 0; i < pixels.size(); ++i) {
+        for(unsigned int i = 0; i < pixels.size(); ++i) {
             pixels[i] /= totalSize;
         }
     }
@@ -53,7 +53,7 @@ void PixelGroup::merge(PixelGroup& p) {
     std::vector<double> tmp;
     tmp.reserve(expected_height * expected_width);
     auto& otherPixels = p.pixels;
-    for(int i = 0; i < pixels.size(); i++) {
+    for(unsigned int i = 0; i < pixels.size(); i++) {
         tmp[i] = (pixels[i] + otherPixels[i]) / avgSize;
     }
 }
@@ -71,7 +71,7 @@ double PixelGroup::similarityTo(ImageGroup &g) {
 
 double PixelGroup::similarityTo(PixelGroup &g) {
     double sum = 0;
-    for(int i = 0; i < pixels.size(); ++i) {
+    for(unsigned int i = 0; i < pixels.size(); ++i) {
         double diff = pixels[i] - g.pixels[i];
         sum += diff*diff;
     }

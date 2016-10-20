@@ -20,7 +20,7 @@ HistogramGroup::HistogramGroup(const ImageGroup& o) {
     else {
         images = o.getImages();
         Histogram tmp = images.at(0)->getHistogram();
-        for(int i = 1; i < images.size(); i++) {
+        for(unsigned int i = 1; i < images.size(); i++) {
             tmp = Histogram(tmp, images.at(i)->getHistogram());
         }
         hist = tmp;
@@ -37,7 +37,7 @@ void HistogramGroup::merge(ImageGroup &other) {
     }
     else {
         Histogram tmp(imgs.at(0)->getHistogram());
-        for(int i = 1; i < imgs.size(); i++) {
+        for(unsigned int i = 1; i < imgs.size(); i++) {
             tmp = Histogram(tmp, imgs.at(i)->getHistogram());
         }
         hist = tmp;
