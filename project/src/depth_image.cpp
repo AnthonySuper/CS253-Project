@@ -114,7 +114,6 @@ int DepthImage::getCategory() {
                 " (this shouldn't happen)");
     }
     std::string s(sm[1]);
-    std::cout << s << std::endl;
     category = stoi(s);
     return category;
 }
