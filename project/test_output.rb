@@ -1,5 +1,6 @@
+require 'open3'
 num_files = (1..7).to_a.reverse
-type = (1..3).to_a
+type = (1..4).to_a
 
 class TestRun < Struct.new(:result, :num_files, :type)
   def to_s
@@ -11,8 +12,17 @@ class TestRun < Struct.new(:result, :num_files, :type)
 end
 
 def run_file(num_files, type)
-  prefix = "test_files/given/pa5"
-  output = `./PA6 #{prefix}/correctfiles.txt #{num_files} #{type}`
+  prefix = "test_files/given/pa5/"
+  cmd = ["./PA6", "#{prefix}correctfiles.txt", num_files.to_s, type.to_s]
+  stdin, stdout, stderr, wait_thr = Open3.popen3(*cmd)
+  output = stdout.read
+  if wait_thr.value != 0
+    raise ["COMMAND FAILED (#{wait_thr.value}) ",
+           "'#{cmd.join(" ")}' with msg #{stderr.read}"].join
+  end
+  stdin.close
+  stdout.close
+  stderr.close
   output.gsub(prefix, "")
 end
 

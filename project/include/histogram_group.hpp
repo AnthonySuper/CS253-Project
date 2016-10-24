@@ -5,28 +5,38 @@
 
 class HistogramGroup : public ImageGroup {
 public:
-    HistogramGroup(std::shared_ptr<DepthImage> img);
+    HistogramGroup(std::shared_ptr<DepthImage> img, int split = 1);
 
-    explicit HistogramGroup(const ImageGroup& other);
+    explicit HistogramGroup(const ImageGroup& other, int split = 1);
 
     virtual void merge(ImageGroup&) override;
 
+    void merge(HistogramGroup&);
+
     virtual double similarityTo(ImageGroup&) override;
+
+    double similarityTo(HistogramGroup& ho);
 
     /**
      * A factory which allows you to make HistogramGroups, given a dataset
      * and a single image.
      */
     class Factory : public ImageGroup::Factory {
+
     public:
+        Factory(int num = 1);
         virtual ImageGroup* create(std::shared_ptr<DepthImage> img) override;
+    private:
+        const int split;
     };
 
-    const Histogram& getHistogram() const {
-        return hist;
+    const std::vector<Histogram>& getHistogramList() const {
+        return histogramList;
     }
 protected:
-    Histogram hist;
+    std::vector<Histogram> splitImage(DepthImage& img);
+    const int split;
+    std::vector<Histogram> histogramList;
 
 };
 #endif

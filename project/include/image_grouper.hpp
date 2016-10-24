@@ -39,6 +39,8 @@ public:
         }
     };
 
+    double getAverageFitness() const;
+
     std::vector<std::shared_ptr<ImageGroup>> getGroups() const;
 
 protected:

@@ -7,6 +7,7 @@
 #include <image_dataset.hpp>
 #include <ostream>
 #include <typeinfo>
+#include <unordered_map>
 
 /**
  * Represents a group of images, which are most likely similar to each other.
@@ -41,6 +42,8 @@ public:
     inline std::vector<ImagePtr> getImages() const {
         return images;
     }
+
+    double getFitness() const;
 
     /**
      * Abstract factory that creates a group from a Dataset and an initial

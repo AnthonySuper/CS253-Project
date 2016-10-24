@@ -39,6 +39,7 @@ void ImageGrouper::mergeGroups(int first, int second) {
     }
 }
 
+
 std::vector<std::shared_ptr<ImageGroup>> ImageGrouper::getGroups() const {
     std::vector<std::shared_ptr<ImageGroup>> tmp;
     tmp.reserve(groups.size());
@@ -46,6 +47,15 @@ std::vector<std::shared_ptr<ImageGroup>> ImageGrouper::getGroups() const {
         tmp.emplace_back(g.group);
     }
     return tmp;
+}
+
+double ImageGrouper::getAverageFitness() const {
+    std::vector<double> fitnesses;
+    for(auto g: groups) {
+        fitnesses.emplace_back(g.group->getFitness());
+    }
+    return std::accumulate(fitnesses.begin(), 
+            fitnesses.end(), 0.0) / fitnesses.size();
 }
 
 void ImageGrouper::mergeClosetGroups() {

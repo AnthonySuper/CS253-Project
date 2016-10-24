@@ -7,6 +7,7 @@
 #include <istream>
 #include <fstream>
 #include <sstream>
+#include <regex>
 
 /**
  * A DepthImage represents, as the name implies, a depth-based image.
@@ -69,6 +70,8 @@ public:
      * via other means (currently not possible)
      */
     inline const std::string& getFileName() const { return fileName; }
+
+    int getCategory();
     /**
      * Convert this DepthImage to a string, which provides some debugging
      * information.
@@ -80,6 +83,7 @@ protected:
     int width;
     std::vector<int> pixelData;
     Histogram histogram;
+    int category = -2;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const DepthImage& i) {

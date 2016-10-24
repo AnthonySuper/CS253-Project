@@ -11,14 +11,17 @@
 
 ImageGroup::Factory* getFactory(int idx) {
     if(idx == 1) {
-        return new HistogramGroup::Factory();
+        return new HistogramGroup::Factory(1);
     }
     else if(idx == 2) {
-        return new QuadGroup::Factory();
+        return new HistogramGroup::Factory(2);
     }
     else if(idx == 3) {
         return new PixelGroup::Factory();
-    } 
+    }
+    else if(idx == 4) {
+        return new HistogramGroup::Factory(3);
+    }
     else {
         throw std::runtime_error("Index out of bounds!");
     }
@@ -37,11 +40,12 @@ int main(int argc, char *argv[]) {
         ImageGroup::Factory *f = getFactory(std::stoi(argv[3]));
         auto groups = ImageGrouper(d, f);
         groups.reduceToGroupCount(i);
-        std::cout << groups << std::endl;
+        std::cout << groups.getAverageFitness() << std::endl;
         delete f;
     }
     catch(const std::exception &e) {
         std::cerr << typeid(e).name() << " " << e.what() << std::endl;
         return -1;
     }
+    
 }

@@ -99,3 +99,22 @@ std::vector<int> DepthImage::getSection(int x, int y, int h, int w) {
 double DepthImage::minimumSumComparison(const DepthImage& o) const {
     return histogram.minimumSum(o.histogram);
 }
+
+int DepthImage::getCategory() {
+    if(category > 0) {
+        return category;
+    }
+    std::regex r("class(\\d+)_.*?\\.pgm");
+    std::smatch sm;
+    if(! std::regex_search(fileName, sm, r)) {
+        throw std::runtime_error("DepthImage has no file name!");
+    }
+    if(sm.size() != 2) {
+        throw std::runtime_error("Regex somehow matched badly" \
+                " (this shouldn't happen)");
+    }
+    std::string s(sm[1]);
+    std::cout << s << std::endl;
+    category = stoi(s);
+    return category;
+}
