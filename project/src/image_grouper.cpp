@@ -53,9 +53,9 @@ double ImageGrouper::getAverageFitness() const {
     int max = 0;
     int total = 0;
     for(auto g: groups) {
-        auto q = g.group->getFitness();
-        max += std::get<0>(q);
-        total += std::get<1>(q);
+        auto q = g.group->getMostOccuringClassCount();
+        max += q;
+        total += g.group->size();
     }
     return (double) max / total;
 }

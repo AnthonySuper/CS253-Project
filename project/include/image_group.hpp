@@ -43,15 +43,14 @@ public:
         return images;
     }
 
+    inline int size() const {
+        return images.size();
+    }
+
     /**
-     * Return a fitness measure, in terms of the most occuring images,
-     * and the total number of images in the group.
-     * To get a percentage value from this, simply divide the first element
-     * of the tuple by the second element
-     *
-     * \return <mostOccuring, totalImages>
+     * Return the number of times the most occuring class occurs.
      */
-    std::tuple<int, int> getFitness() const;
+    int getMostOccuringClassCount() const;
 
     /**
      * Abstract factory that creates a group from a Dataset and an initial
