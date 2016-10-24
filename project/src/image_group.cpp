@@ -18,7 +18,7 @@ void ImageGroup::appendImages(std::vector<ImagePtr> imgs) {
     images.insert(images.end(), imgs.begin(), imgs.end());
 }
 
-double ImageGroup::getFitness() const {
+std::tuple<int, int> ImageGroup::getFitness() const {
     std::unordered_map<int, int> m;
     for(auto img: images) {
         int cat = img->getCategory();
@@ -32,8 +32,8 @@ double ImageGroup::getFitness() const {
     }
     auto it = std::max_element(m.begin(), 
             m.end(), 
-            [](auto a, auto b) { return a.second > b.second; });
-    return (double) it->second / images.size();
+            [](auto a, auto b) { return a.second < b.second; });
+    return std::make_tuple(it->second, images.size());
 }
 
 ImageGroup::~ImageGroup() {

@@ -13,7 +13,7 @@ end
 
 def run_file(num_files, type)
   prefix = "test_files/given/pa5/"
-  cmd = ["./PA6", "#{prefix}correctfiles.txt", num_files.to_s, type.to_s]
+  cmd = ["./PA7", "#{prefix}correctfiles.txt", num_files.to_s, type.to_s]
   stdin, stdout, stderr, wait_thr = Open3.popen3(*cmd)
   output = stdout.read
   if wait_thr.value != 0

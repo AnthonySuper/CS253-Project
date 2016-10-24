@@ -50,12 +50,14 @@ std::vector<std::shared_ptr<ImageGroup>> ImageGrouper::getGroups() const {
 }
 
 double ImageGrouper::getAverageFitness() const {
-    std::vector<double> fitnesses;
+    int max = 0;
+    int total = 0;
     for(auto g: groups) {
-        fitnesses.emplace_back(g.group->getFitness());
+        auto q = g.group->getFitness();
+        max += std::get<0>(q);
+        total += std::get<1>(q);
     }
-    return std::accumulate(fitnesses.begin(), 
-            fitnesses.end(), 0.0) / fitnesses.size();
+    return (double) max / total;
 }
 
 void ImageGrouper::mergeClosetGroups() {
