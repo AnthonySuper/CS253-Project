@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require 'open3'
-require 'pry'
 
 num_files = (1..7).to_a.reverse
 type = (1..4).to_a
