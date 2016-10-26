@@ -40,5 +40,4 @@ ImageGroup::~ImageGroup() {
 }
 
 ImageGroup::Factory::~Factory() {
-
 }

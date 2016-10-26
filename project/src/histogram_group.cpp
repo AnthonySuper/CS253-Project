@@ -74,7 +74,7 @@ void HistogramGroup::merge(ImageGroup &other) {
         merge(hs);
     }
     else {
-        HistogramGroup hs = HistogramGroup(other, split);;
+        HistogramGroup hs = HistogramGroup(other, split);
         merge(hs);
     }
 }

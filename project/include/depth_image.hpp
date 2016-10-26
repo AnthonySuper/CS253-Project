@@ -59,6 +59,9 @@ public:
      */
     inline const std::vector<int>& getPixelData() const { return pixelData; }
 
+    /**
+     * Get the pixels in a section of the image.
+     */
     std::vector<int> getSection(int x, int y, int height, int width);
     /**
      * Obtain a reference to the histogram made from this DepthImage
@@ -71,6 +74,9 @@ public:
      */
     inline const std::string& getFileName() const { return fileName; }
 
+    /**
+     * Obtain the numerical category of the image.
+     */
     int getCategory();
     /**
      * Convert this DepthImage to a string, which provides some debugging
