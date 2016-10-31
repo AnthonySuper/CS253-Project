@@ -33,6 +33,22 @@ public:
         return images;
     }
 
+    inline std::vector<ImagePtr>::iterator begin() {
+        return images.begin();
+    }
+
+    inline std::vector<ImagePtr>::iterator end() {
+        return images.end();
+    }
+
+    inline std::vector<ImagePtr>::const_iterator begin() const {
+        return images.begin();
+    }
+
+    inline std::vector<ImagePtr>::const_iterator end() const {
+        return images.end();
+    }
+
     ImageDataset() = default;
 
 protected:

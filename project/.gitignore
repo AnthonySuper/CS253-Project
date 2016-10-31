@@ -1,7 +1,7 @@
 exec1
 bin/*
 obj/*
-PA7
+PA8
 *.dSYM
 test
 test_out

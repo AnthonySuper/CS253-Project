@@ -7,7 +7,7 @@ OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTSRCS := $(wildcard $(TESTDIR)/*.cpp)
 TESTOBJS := $(TESTSRCS:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTTARGET := test
-TARGET := PA7
+TARGET := PA8
 
 
 $(TARGET): main.cpp $(OBJECTS)
