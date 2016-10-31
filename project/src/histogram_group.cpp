@@ -1,13 +1,13 @@
 #include <histogram_group.hpp>
 
-static std::vector<Histogram> mergeHistVecs(std::vector<Histogram> a,
-        std::vector<Histogram> b) {
+static std::vector<Histogram> mergeHistVecs(const std::vector<Histogram>& a,
+        const std::vector<Histogram>& b) {
     if(a.size() != b.size() || a.size() == 0) {
         throw std::invalid_argument("List lengths are unequal or invalid");
     }
     std::vector<Histogram> tmp;
     tmp.reserve(a.size());
-    for(int i = 0; i < a.size(); ++i) {
+    for(unsigned int i = 0; i < a.size(); ++i) {
         tmp.emplace_back(a[i], b[i]);
     }
     return tmp;
@@ -100,7 +100,7 @@ double HistogramGroup::similarityTo(HistogramGroup& ho) {
         throw std::invalid_argument("histogram groups have different splits");
     }
     double sum = 0;
-    for(int i = 0; i < histogramList.size(); ++i) {
+    for(unsigned int i = 0; i < histogramList.size(); ++i) {
         sum += histogramList[i].minimumSum(ho.histogramList[i]);
     }
     return sum / (((double) split) * ((double) split));
