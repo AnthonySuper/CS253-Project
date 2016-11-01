@@ -19,7 +19,7 @@ void Perception::train(const Histogram &h, int d) {
     for(int i = 0; i < binCount; ++i) {
         bins[i] = bins[i] + ((d - y) * b[i]);
     }
-    bias = bias + (d - y);
+    bias = bias + (static_cast<double>(d) - y);
 }
 
 std::ostream& operator<<(std::ostream& os, const Perception& p) {

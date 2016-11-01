@@ -4,6 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <memory>
+#include <set>
 
 /**
  * A class which holds a set of images for further analysis.
@@ -49,10 +50,17 @@ public:
         return images.end();
     }
 
+    inline bool hasClass(int i) const {
+        return classList.find(i) != classList.end();
+    }
+
+
     ImageDataset() = default;
 
 protected:
+    void addClass(int);
     std::vector<ImagePtr> images;
+    std::set<int> classList;
 };
 
 #endif

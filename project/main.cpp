@@ -17,6 +17,9 @@ int main(int argc, char *argv[]) {
     try {
         auto d = ImageDataset::fromFile(argv[1]);
         int i = std::stoi(argv[2]);
+        if(! d.hasClass(i)) {
+            throw std::runtime_error("Nonexistant image class specified");
+        }
         /*
         Perception p;
         p.train(d.at(0)->getHistogram(), 1);

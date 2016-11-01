@@ -16,7 +16,7 @@ public:
         return bins;
     }
 
-    const int getBias() const {
+    const double getBias() const {
         return bias;
     }
 
