@@ -7,7 +7,7 @@ Perception::Perception() :
 double Perception::getValue(const Histogram &h) {
     auto &b = h.getNormalizedBins();
     double sum = 0;
-    for(int i = 0; i < Histogram::binCount; i++) {
+    for(unsigned int i = 0; i < Histogram::binCount; i++) {
         sum += (bins[i] * b[i]);
     }
     return sum + bias;
