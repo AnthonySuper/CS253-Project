@@ -1,14 +1,14 @@
+CXX := clang++
 OBJDIR := ./obj
 SRCDIR := ./src
 TESTDIR := ./test_srcs
-CXXFLAGS := -Iinclude -std=c++14 -Wall -g -frtti
+CXXFLAGS := -Iinclude -std=c++14 -Wall -O3 -frtti -ffast-math
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTSRCS := $(wildcard $(TESTDIR)/*.cpp)
 TESTOBJS := $(TESTSRCS:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTTARGET := test
 TARGET := PA8
-
 
 $(TARGET): main.cpp $(OBJECTS)
 	@mkdir -p $(OBJDIR)
