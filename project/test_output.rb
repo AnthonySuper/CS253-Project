@@ -8,7 +8,7 @@ class TestRun < Struct.new(:train_path, :test_path, :num_groups, :result)
     # this lets me the script without an argument
     train_path ||= "test_files/given/perceptron_train/correctfiles.txt"
     test_path ||= "test_files/given/pa5/correctfiles.txt"
-    cmd = ["./PA8", train_path, test_path, num_groups.to_s]
+    cmd = ["./PA9", train_path, test_path, num_groups.to_s]
     stdin, stdout, stderr, wait_thr = Open3.popen3(*cmd)
     output = stdout.read
     # status code wasn't zero, fail

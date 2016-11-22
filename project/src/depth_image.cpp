@@ -7,16 +7,40 @@ static void depthError(int in) {
 }
 
 
+MMapBuff::MMapBuff(std::string fname)
+{
+    int fd = open(fname.c_str(), O_RDWR);
+    if(fd < 0) {
+        throw FileNotFoundError("File could not be opened");
+    }
+    struct stat stats;
+    fstat(fd, &stats);
+    size = stats.st_size;
+    ptr = mmap(NULL,
+               size,
+               PROT_READ,
+               MAP_PRIVATE, fd, 0);
+    if(ptr == reinterpret_cast<void*>(-1)) {
+        throw std::runtime_error("File could not be mapped!");
+    }
+    this->setg(static_cast<char*>(ptr),
+               static_cast<char*>(ptr),
+               static_cast<char*>(ptr) + stats.st_size);
+}
+
+MMapBuff::~MMapBuff()
+{
+    munmap(ptr, size);
+}
+
 DepthImage::DepthImage(std::string filename) :
     fileName(filename) 
 {
-    std::ifstream f(filename);
+    
+    MMapBuff mb(filename);
+    std::istream f(&mb);
     f >> std::noskipws;
     int maxValue;
-    // File must start with these two characters, so we disallow whitespace
-    if(! f.is_open()) {
-        throw FileNotFoundError(filename);
-    }
     char c1 = '\0', c2 = '\0';
     f >> c1;
     f >> c2;
