@@ -17,6 +17,7 @@ PerceptionTrainer::PerceptionTrainer(ImageDataset _ds, int count) :
     ds{_ds}
 {
     std::vector<std::future<Perception>> futures;
+    futures.reserve(ds.getClassList().size());
     for(auto klass: ds.getClassList()) {
         futures.emplace_back(std::async([=, &_ds](int klass){
             return trainPerception(ds, count, klass);
