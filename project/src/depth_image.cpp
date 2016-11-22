@@ -7,9 +7,9 @@ static void depthError(int in) {
 }
 
 DepthImage::DepthImage(std::string filename) :
-    fileName(filename), pixelData(128*128)
+    fileName(filename)
 {
-    
+    pixelData.reserve(128 * 128);
     std::ifstream f(filename);
     f >> std::noskipws;
     int maxValue;
@@ -38,7 +38,7 @@ DepthImage::DepthImage(std::string filename) :
         if(i < 0 || i > 255) {
             throw BadNumberError(i);
         }
-        pixelData.push_back(i);
+        pixelData.emplace_back(static_cast<uint8_t>(i));
     }
     if(! f.eof()) {
         throw InvalidFormatError("[2] Read a non-number!");
