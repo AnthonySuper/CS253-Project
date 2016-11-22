@@ -9,7 +9,7 @@ ImageDataset ImageDataset::fromFile(std::string fname) {
     }
     std::string s;
     while(f.is_open() && f >> s) {
-        futures.emplace_back(std::async([=](std::string s) {
+        futures.emplace_back(std::async(std::launch::deferred,[=](std::string s) {
             return std::make_shared<DepthImage>(s);
         }, s));
     }

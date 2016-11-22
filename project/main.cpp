@@ -17,9 +17,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Not enough arguments" << std::endl;
         return -1;
     }
-    
     try {
-        
         /*
         auto d = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
         auto d2 = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
