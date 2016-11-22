@@ -36,9 +36,8 @@ void ImageGrouper::mergeGroups(int first,
             badIndexes.emplace_back(i);
         }
     }
-    std::vector<std::future<void>> futures;
     for(auto i: badIndexes) {
-        futures.emplace_back(std::async([&](unsigned int i){
+        [&](unsigned int i){
             auto& g1 = groups.at(i);
             for(int k = 0; k < groups.size(); ++k){
                 if(k == i) {
@@ -48,10 +47,7 @@ void ImageGrouper::mergeGroups(int first,
                 double sim = g1.group.similarityTo(g2.group, pt);
                 g1.compareSimilarity(k, sim);
             }
-        }, i));
-    }
-    for(auto &fut: futures) {
-        fut.get();
+        }(i);
     }
 }
 
