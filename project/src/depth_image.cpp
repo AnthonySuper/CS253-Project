@@ -7,7 +7,7 @@ static void depthError(int in) {
 }
 
 DepthImage::DepthImage(std::string filename) :
-    fileName(filename) 
+    fileName(filename), pixelData(128*128)
 {
     
     std::ifstream f(filename);
@@ -74,22 +74,6 @@ DepthImage::operator std::string() const  {
     s << "DepthImage{height: " << height << ", width: " << width;
     s << ", fileName: \"" << fileName << "\"}";
     return s.str();
-}
-
-std::vector<int> DepthImage::getSection(int x, int y, int h, int w) {
-    if(x + w >= width || y + h >= height) {
-        throw std::invalid_argument("out of bounds");
-    }
-    std::vector<int> fragment;
-    fragment.reserve(h * w);
-    for(int i = 0; i < h; ++i) {
-        for(int j = 0; j < w; ++j) {
-            int yOffset = width*(i + y);
-            int xOffset = (j + x);
-            fragment.emplace_back(pixelData.at(yOffset + xOffset));
-        }
-    }
-    return fragment;
 }
 
 double DepthImage::minimumSumComparison(const DepthImage& o) const {

@@ -8,7 +8,7 @@
 #include <cmath>
 #include <vector>
 #include <errors.hpp>
-
+#include <cstdint>
 /**
  * A histogram which uses binned values of length 4, to a max value of 255.
  * It stores the individual bins in two formats: their counts, and normalized.
@@ -30,7 +30,7 @@ public:
      * All numbers must be between 0 and 255.
      * \param list the list of numbers to construct a histogram from.
      */
-    Histogram(const std::vector<int> &list);
+    Histogram(const std::vector<uint8_t> &list);
     /**
      * Construct a histogram by merging two histograms.
      * This adds their binned values together bin-wise, then calculates the

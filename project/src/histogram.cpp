@@ -27,7 +27,7 @@ Histogram::Histogram(const Histogram& h1, const Histogram &h2) :
     }
 }
 
-Histogram::Histogram(const std::vector<int> &numbers) : 
+Histogram::Histogram(const std::vector<uint8_t> &numbers) :
     bins{},
     normalizedBins{}
 {

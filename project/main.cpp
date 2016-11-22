@@ -13,15 +13,17 @@
 using std::cout;
 using std::endl;
 int main(int argc, char *argv[]) {
-    
     if(argc < 4) {
         std::cerr << "Not enough arguments" << std::endl;
         return -1;
     }
+    
     try {
+        
         /*
         auto d = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
         auto d2 = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
+        int gc = 10;
         */
         auto d = ImageDataset::fromFile(argv[1]);
         auto d2 = ImageDataset::fromFile(argv[2]);
@@ -35,5 +37,4 @@ int main(int argc, char *argv[]) {
         std::cerr << typeid(e).name() << " " << e.what() << std::endl;
         return -1;
     }
-    
 }

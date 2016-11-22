@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <cstdint>
 
 
 
@@ -60,12 +61,7 @@ public:
      * The vector should be considered in the context of the width and height
      * of this DepthImage.
      */
-    inline const std::vector<int>& getPixelData() const { return pixelData; }
-
-    /**
-     * Get the pixels in a section of the image.
-     */
-    std::vector<int> getSection(int x, int y, int height, int width);
+    inline const std::vector<uint8_t>& getPixelData() const { return pixelData; }
     /**
      * Obtain a reference to the histogram made from this DepthImage
      */
@@ -90,7 +86,7 @@ protected:
     std::string fileName;
     int height;
     int width;
-    std::vector<int> pixelData;
+    std::vector<uint8_t> pixelData;
     Histogram histogram;
     int category = -2;
 };
