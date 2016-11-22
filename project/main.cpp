@@ -13,18 +13,20 @@
 using std::cout;
 using std::endl;
 int main(int argc, char *argv[]) {
-    /*
-    if(argc < 2) {
+    if(argc < 4) {
         std::cerr << "Not enough arguments" << std::endl;
         return -1;
     }
-     */
     try {
-        auto d = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
-        auto d2 = ImageDataset::fromFile("test_files/given/pa5/correctfiles.txt");
+        auto d = ImageDataset::fromFile(argv[1]);
+        auto d2 = ImageDataset::fromFile(argv[2]);
+        int gc = std::atoi(argv[3]);
+        if(gc < 2) {
+            throw std::runtime_error("Need to make at least 2 groups");
+        }
         PerceptionTrainer pt(d);
         ImageGrouper g(d2, pt);
-        g.reduceToGroupCount(3);
+        g.reduceToGroupCount(gc);
         std::cout << g << std::endl;
     }
     catch(const std::exception &e) {

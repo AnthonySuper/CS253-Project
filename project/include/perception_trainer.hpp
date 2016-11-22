@@ -4,19 +4,19 @@
 #include <image_dataset.hpp>
 #include <vector>
 #include <thread>
+#include <future>
 
 class PerceptionTrainer {
 public:
     PerceptionTrainer(ImageDataset ds, int count = 100);
 
-    
     std::vector<Perception> getPerceptions() { return perceptions; }
     
     const std::vector<Perception>& getPerceptions() const { return perceptions; }
 
 private:
     
-    void trainPerception(int count, int classNum, int idx);
+
     
     const ImageDataset ds;
     

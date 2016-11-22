@@ -15,7 +15,7 @@ ImageGroup::operator std::string() const {
 }
 
 ImageGroup::ImageGroup(std::shared_ptr<DepthImage> im) :
-images{im}
+images{im}, hg{im->getHistogram()}
 {
 }
 
@@ -24,7 +24,7 @@ double ImageGroup::similarityTo(ImageGroup& o, const PerceptionTrainer& pt)
     double sum = 0;
     for(const Perception& p: pt.getPerceptions()) {
         double under = (p.getValue(hg) - p.getValue(o.hg));
-        under = std::pow(under, 2);
+        under = under*under + std::numeric_limits<double>::min();
         sum += 1 / under;
     }
     return sum;

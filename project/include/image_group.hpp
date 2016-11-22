@@ -8,6 +8,7 @@
 #include <image_dataset.hpp>
 #include <ostream>
 #include <typeinfo>
+#include <iostream>
 #include <unordered_map>
 
 /**

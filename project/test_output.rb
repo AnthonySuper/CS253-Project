@@ -1,16 +1,14 @@
 #!/usr/bin/env ruby
 require 'open3'
 
-num_files = (1..7).to_a.reverse
-type = (1..4).to_a
+type = (2..7).to_a
 
-class TestRun < Struct.new(:klass, :result)
-  def self.from_run(klass, list_path)
+class TestRun < Struct.new(:train_path, :test_path, :num_groups, :result)
+  def self.from_run(train_path, test_path, num_groups)
     # this lets me the script without an argument
-    if list_path.nil?
-      list_path = "test_files/given/pa5/correctfiles.txt"
-    end
-    cmd = ["./PA8", list_path, klass.to_s]
+    train_path ||= "test_files/given/perceptron_train/correctfiles.txt"
+    test_path ||= "test_files/given/pa5/correctfiles.txt"
+    cmd = ["./PA8", train_path, test_path, num_groups.to_s]
     stdin, stdout, stderr, wait_thr = Open3.popen3(*cmd)
     output = stdout.read
     # status code wasn't zero, fail
@@ -23,18 +21,18 @@ eos
     stdin.close
     stdout.close
     stderr.close
-    self.new(klass, output)
+    self.new(train_path, test_path, num_groups, output)
   end
 
   def to_s
-    "./PA6 LIST #{klass}:\n#{result}"
+    "./PA6 #{train_path} #{test_path} #{num_groups}:\n#{result}"
   end
 end
 
 
 
-output = (1..4).to_a.map do |klass|
-  TestRun.from_run(klass, ARGV[0])
+output = type.map do |t|
+  TestRun.from_run(ARGV[0], ARGV[1],t)
 end
 
 puts output.join("\n\n")
