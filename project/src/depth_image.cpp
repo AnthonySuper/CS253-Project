@@ -6,39 +6,11 @@ static void depthError(int in) {
     throw InvalidFormatError(s.str());
 }
 
-
-MMapBuff::MMapBuff(std::string fname)
-{
-    int fd = open(fname.c_str(), O_RDWR);
-    if(fd < 0) {
-        throw FileNotFoundError("File could not be opened");
-    }
-    struct stat stats;
-    fstat(fd, &stats);
-    size = stats.st_size;
-    ptr = mmap(NULL,
-               size,
-               PROT_READ,
-               MAP_PRIVATE, fd, 0);
-    if(ptr == reinterpret_cast<void*>(-1)) {
-        throw std::runtime_error("File could not be mapped!");
-    }
-    this->setg(static_cast<char*>(ptr),
-               static_cast<char*>(ptr),
-               static_cast<char*>(ptr) + stats.st_size);
-}
-
-MMapBuff::~MMapBuff()
-{
-    munmap(ptr, size);
-}
-
 DepthImage::DepthImage(std::string filename) :
     fileName(filename) 
 {
     
-    MMapBuff mb(filename);
-    std::istream f(&mb);
+    std::ifstream f(filename);
     f >> std::noskipws;
     int maxValue;
     char c1 = '\0', c2 = '\0';

@@ -8,20 +8,9 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <sys/stat.h>
 
 
-struct MMapBuff : public std::streambuf {
-    MMapBuff(std::string fname);
-    ~MMapBuff();
-    MMapBuff(const MMapBuff&) = delete;
-    MMapBuff& operator=(const MMapBuff&) = delete;
-private:
-    void *ptr;
-    size_t size;
-};
+
 
 /**
  * A DepthImage represents, as the name implies, a depth-based image.
