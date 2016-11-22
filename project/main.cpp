@@ -21,9 +21,6 @@ int main(int argc, char *argv[]) {
         auto d = ImageDataset::fromFile(argv[1]);
         auto d2 = ImageDataset::fromFile(argv[2]);
         int gc = std::atoi(argv[3]);
-        if(gc < 2) {
-            throw std::runtime_error("Need to make at least 2 groups");
-        }
         PerceptionTrainer pt(d);
         ImageGrouper g(d2, pt);
         g.reduceToGroupCount(gc);
