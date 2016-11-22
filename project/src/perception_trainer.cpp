@@ -11,8 +11,6 @@ static Perception trainPerception(const ImageDataset& ds, int itrCount, int klas
     return p;
 }
 
-
-
 PerceptionTrainer::PerceptionTrainer(ImageDataset _ds, int count) :
     ds{_ds}
 {
