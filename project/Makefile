@@ -3,16 +3,17 @@ OBJDIR := ./obj
 SRCDIR := ./src
 TESTDIR := ./test_srcs
 CXXFLAGS := -Iinclude -std=c++14 -Wall -O3 -frtti -ffast-math
+LDFLAGS := -pthread
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTSRCS := $(wildcard $(TESTDIR)/*.cpp)
 TESTOBJS := $(TESTSRCS:$(TESTDIR)/%.cpp=$(OBJDIR)/%.o)
 TESTTARGET := test
-TARGET := PA8
+TARGET := PA9
 
 $(TARGET): main.cpp $(OBJECTS)
 	@mkdir -p $(OBJDIR)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 
 .PHONY: clean docs
@@ -24,7 +25,7 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(TESTTARGET): $(TESTOBJS) $(OBJECTS) test.cpp
-	$(CXX) $(CXXFLAGS) -Itest_srcs $^ -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -Itest_srcs $^ -o $@
 
 $(TESTOBJS): $(OBJDIR)/%.o : $(TESTDIR)/%.cpp
 	@mkdir -p $(OBJDIR)
