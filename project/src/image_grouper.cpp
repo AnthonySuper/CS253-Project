@@ -37,17 +37,15 @@ void ImageGrouper::mergeGroups(int first,
         }
     }
     for(auto i: badIndexes) {
-        [&](unsigned int i){
-            auto& g1 = groups.at(i);
-            for(int k = 0; k < groups.size(); ++k){
-                if(k == i) {
-                    continue;
-                }
-                auto &g2 = groups.at(k);
-                double sim = g1.group.similarityTo(g2.group, pt);
-                g1.compareSimilarity(k, sim);
+        auto& g1 = groups.at(i);
+        for(int k = 0; k < groups.size(); ++k){
+            if(k == i) {
+                continue;
             }
-        }(i);
+            auto &g2 = groups.at(k);
+            double sim = g1.group.similarityTo(g2.group, pt);
+            g1.compareSimilarity(k, sim);
+        }
     }
 }
 
