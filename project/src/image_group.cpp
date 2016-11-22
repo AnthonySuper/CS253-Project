@@ -14,8 +14,20 @@ ImageGroup::operator std::string() const {
     return ss.str();
 }
 
-void ImageGroup::appendImages(std::vector<ImagePtr> imgs) {
-    images.insert(images.end(), imgs.begin(), imgs.end());
+ImageGroup::ImageGroup(std::shared_ptr<DepthImage> im) :
+images{im}
+{
+}
+
+double ImageGroup::similarityTo(ImageGroup& o, const PerceptionTrainer& pt)
+{
+    double sum = 0;
+    for(const Perception& p: pt.getPerceptions()) {
+        double under = (p.getValue(hg) - p.getValue(o.hg));
+        under = std::pow(under, 2);
+        sum += 1 / under;
+    }
+    return sum;
 }
 
 int ImageGroup::getMostOccuringClassCount() const {
@@ -36,8 +48,9 @@ int ImageGroup::getMostOccuringClassCount() const {
     return it->second;
 }
 
-ImageGroup::~ImageGroup() {
-}
-
-ImageGroup::Factory::~Factory() {
+void ImageGroup::merge(ImageGroup& other) {
+    hg = Histogram(hg, other.hg);
+    images.insert(images.end(),
+                  other.images.begin(),
+                  other.images.end());
 }

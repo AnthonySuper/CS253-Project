@@ -4,7 +4,7 @@ Perception::Perception() :
   bins{}, bias(0)
 {}
 
-double Perception::getValue(const Histogram &h) {
+double Perception::getValue(const Histogram &h) const {
     auto &b = h.getNormalizedBins();
     double sum = 0;
     for(unsigned int i = 0; i < Histogram::binCount; i++) {

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <perception_trainer.hpp>
 #include <image_dataset.hpp>
 #include <ostream>
 #include <typeinfo>
@@ -17,24 +18,21 @@ public:
     using ImagePtr = std::shared_ptr<DepthImage>;
 
     friend std::ostream& operator<<(std::ostream&, const ImageGroup&);
-
-    virtual ~ImageGroup();
+    
+    ImageGroup(ImagePtr ip);
     
     /**
      * Merge another group into this group.
      * Does not modify the other group.
      */
-    virtual void merge(ImageGroup&) = 0;
+    void merge(ImageGroup&);
 
     virtual operator std::string() const;
 
     /**
      * Determine the similarity of this group to another group.
-     * If the two groups are of the same type, this method will likely be
-     * much faster than otherwise, but all implementers should ensure that
-     * they work for arbitrary group types.
      */
-    virtual double similarityTo(ImageGroup&) = 0;
+    double similarityTo(ImageGroup&, const PerceptionTrainer&);
 
     /**
      * Get the images that belong to this group.
@@ -52,23 +50,10 @@ public:
      */
     int getMostOccuringClassCount() const;
 
-    /**
-     * Abstract factory that creates a group from a Dataset and an initial
-     * index. You can then modify this group using the ImageGroup::merge method
-     */
-    class Factory {
-    public:
-        /**
-         * Create a group given a single image.
-         */
-        virtual ImageGroup* create(ImagePtr) = 0;
-        virtual ~Factory();
-    };
-
 protected:
     std::vector<ImagePtr> images;
-
-    void appendImages(std::vector<ImagePtr> images);
+    
+    Histogram hg;
 
     ImageGroup() {} 
 };

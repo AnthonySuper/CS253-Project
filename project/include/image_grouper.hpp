@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <image_dataset.hpp>
+#include <perception_trainer.hpp>
 #include <image_group.hpp>
 #include <errors.hpp>
 #include <cassert>
@@ -15,22 +16,23 @@ using std::vector;
 
 class ImageGrouper {
 public:
-    ImageGrouper(ImageDataset, ImageGroup::Factory*);
+    ImageGrouper(ImageDataset, PerceptionTrainer pt);
+    
     void reduceToGroupCount(int count);
+    
     friend std::ostream& operator<<(std::ostream &os, const ImageGrouper& g);
 
     struct GroupHelper {
         int nearestIndex = -1;
         double nearestSimilarity = -1;
-        shared_ptr<ImageGroup> group;
-        GroupHelper(shared_ptr<ImageGroup> g) :
-            group(g) {}
-        GroupHelper(ImageGroup *g) :
-            group(g) {}
+        ImageGroup group;
+        GroupHelper(ImageGroup ig) : group(ig) {}
+        
         inline void resetSimilarity() {
             nearestIndex = -1;
             nearestSimilarity = -1;
         }
+        
         inline void compareSimilarity(int indx, double sim) {
             if(sim > nearestSimilarity) {
                 nearestSimilarity = sim;
@@ -41,16 +43,19 @@ public:
 
     double getAverageFitness() const;
 
-    std::vector<std::shared_ptr<ImageGroup>> getGroups() const;
+    const std::vector<ImageGroup> getGroups() const;
 
 protected:
     void mergeGroups(int first, int second);
     int getClosestGroupIndex();
-    void compareSimilarity(int start, int end);
-    void calculateNearestNeighbor(int baseIndex, int startingIndex = 0);
+    void compareSimilarity(int start,
+                           int end);
+    void calculateNearestNeighbor(int baseIndex,
+                                  int startingIndex = 0);
     void calculateNearestNeighbors();
     void mergeClosetGroups();
     vector<GroupHelper> groups;
+    const PerceptionTrainer pt;
 };
 
 std::ostream& operator<<(std::ostream&,const ImageGroup&);

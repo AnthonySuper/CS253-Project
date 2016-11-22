@@ -8,3 +8,4 @@ test_out
 .DS_Store
 docs/*
 *.tar
+build/*

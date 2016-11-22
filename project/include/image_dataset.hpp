@@ -5,14 +5,13 @@
 #include <fstream>
 #include <memory>
 #include <set>
+#include <future>
 
 /**
  * A class which holds a set of images for further analysis.
  * It can only be accessed from the static member fromFile, which returns
  * a shared_ptr<ImageDataset>.
  * The reason for this is that copying these datasets is *hugely* expensive.
- * Most of the classes that analyze this use pointers internally, and store
- * indexes to images as opposed to an image itself.
  */
 class ImageDataset {
 public:
@@ -23,6 +22,8 @@ public:
     void emplace_back(std::string fname);
 
     void emplace_back(const DepthImage& img);
+    
+    void emplace_back(ImagePtr);
 
     ImagePtr at(int index);
 
@@ -53,7 +54,14 @@ public:
     inline bool hasClass(int i) const {
         return classList.find(i) != classList.end();
     }
-
+    
+    inline const std::set<int>& getClassList() const {
+        return classList;
+    }
+    
+    inline std::set<int> getClassList() {
+        return classList;
+    }
 
     ImageDataset() = default;
 

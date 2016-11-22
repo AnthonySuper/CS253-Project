@@ -8,9 +8,12 @@ class Perception {
 public:
     static constexpr int binCount = 64;
     using BinType = std::array<double, binCount>;
-    double getValue(const Histogram& h);
+    double getValue(const Histogram& h) const;
+    
     void train(const Histogram &h, int d);
+    
     Perception();
+    
 
     const BinType& getBins() const {
         return bins;

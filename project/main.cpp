@@ -4,35 +4,28 @@
 #include <stdexcept>
 #include <depth_image.hpp>
 #include <image_dataset.hpp>
+#include <image_grouper.hpp>
 #include <perception_trainer.hpp>
 
+
+// 0.423
 
 using std::cout;
 using std::endl;
 int main(int argc, char *argv[]) {
-    if(argc < 3) {
+    /*
+    if(argc < 2) {
         std::cerr << "Not enough arguments" << std::endl;
         return -1;
     }
+     */
     try {
-        auto d = ImageDataset::fromFile(argv[1]);
-        int i = std::stoi(argv[2]);
-        if(! d.hasClass(i)) {
-            throw std::runtime_error("Nonexistant image class specified");
-        }
-        /*
-        Perception p;
-        p.train(d.at(0)->getHistogram(), 1);
-        cout << p << endl;
-        cout << p.getValue(d.at(0)->getHistogram());
-        */
-        
-        
-        PerceptionTrainer ps(d, i);
-        ps.trainUntilEpoch();
-        cout << ps.getPerception() << endl;
-        
-        
+        auto d = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
+        auto d2 = ImageDataset::fromFile("test_files/given/pa5/correctfiles.txt");
+        PerceptionTrainer pt(d);
+        ImageGrouper g(d2, pt);
+        g.reduceToGroupCount(3);
+        std::cout << g << std::endl;
     }
     catch(const std::exception &e) {
         std::cerr << typeid(e).name() << " " << e.what() << std::endl;

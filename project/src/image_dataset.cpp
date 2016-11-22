@@ -3,14 +3,25 @@
 ImageDataset ImageDataset::fromFile(std::string fname) {
     ImageDataset ds;
     std::ifstream f{fname};
+    std::vector<std::future<std::shared_ptr<DepthImage>>> futures;
     if(! f.is_open()) {
         throw FileNotFoundError(fname);
     }
     std::string s;
     while(f.is_open() && f >> s) {
-        ds.emplace_back(s);
+        futures.emplace_back(std::async([=](std::string s) {
+            return std::make_shared<DepthImage>(s);
+        }, s));
+    }
+    for(auto &f: futures) {
+        ds.emplace_back(f.get());
     }
     return ds;
+}
+
+void ImageDataset::emplace_back(ImagePtr ip) {
+    images.emplace_back(ip);
+    addClass(ip->getCategory());
 }
 
 void ImageDataset::emplace_back(std::string fname) {
