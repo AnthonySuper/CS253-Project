@@ -8,7 +8,15 @@ class Perception {
 public:
     static constexpr int binCount = 64;
     using BinType = std::array<double, binCount>;
-    double getValue(const Histogram& h) const;
+    inline double getValue(const Histogram& h) const
+    {
+        auto &b = h.getNormalizedBins();
+        double sum = 0;
+        for(unsigned int i = 0; i < Histogram::binCount; ++i) {
+            sum += (bins[i] * b[i]);
+        }
+        return sum + bias;
+    }
     
     void train(const Histogram &h, int d);
     
