@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'open3'
 
-type = (2..7).to_a
+type = (1..7).to_a
 
 class TestRun < Struct.new(:train_path, :test_path, :num_groups, :result)
   def self.from_run(train_path, test_path, num_groups)
