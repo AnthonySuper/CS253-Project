@@ -13,7 +13,6 @@
 using std::cout;
 using std::endl;
 int main(int argc, char *argv[]) {
-    std::ios::sync_with_stdio(false);
     if(argc < 4) {
         std::cerr << "Not enough arguments" << std::endl;
         return -1;

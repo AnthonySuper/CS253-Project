@@ -31,7 +31,7 @@ void ImageGrouper::mergeGroups(int first,
     std::vector<unsigned int> badIndexes;
     for(unsigned int i = 0; i < groups.size(); ++i) {
         auto &g = groups.at(i);
-        if(g.nearestIndex >= 2 || g.nearestIndex == 1) {
+        if(g.nearestIndex >= second - 1 || g.nearestIndex == first) {
             g.resetSimilarity();
             badIndexes.emplace_back(i);
         }

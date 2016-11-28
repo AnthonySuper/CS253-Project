@@ -23,7 +23,9 @@ double ImageGroup::similarityTo(ImageGroup& o, const PerceptionTrainer& pt)
 {
     double sum = 0;
     for(const Perception& p: pt.getPerceptions()) {
-        double under = (p.getValue(hg) - p.getValue(o.hg));
+        double vala = p.getValue(hg);
+        double valb = p.getValue(o.hg);
+        double under = (vala - valb);
         under = under*under + std::numeric_limits<double>::min();
         sum += 1 / under;
     }
