@@ -19,9 +19,9 @@ public:
     using ImagePtr = std::shared_ptr<DepthImage>;
 
     friend std::ostream& operator<<(std::ostream&, const ImageGroup&);
-    
+
     ImageGroup(ImagePtr ip);
-    
+
     /**
      * Merge another group into this group.
      * Does not modify the other group.
@@ -33,7 +33,19 @@ public:
     /**
      * Determine the similarity of this group to another group.
      */
-    double similarityTo(ImageGroup&, const PerceptionTrainer&);
+
+    inline double similarityTo(ImageGroup& o, const PerceptionTrainer& pt)
+    {
+        double sum = 0;
+        for(const Perception& p: pt.getPerceptions()) {
+            double vala = p.getValue(hg);
+            double valb = p.getValue(o.hg);
+            double under = (vala - valb) + 0.001;
+            under = under*under;
+            sum += 1 / under;
+        }
+        return sum;
+    }
 
     /**
      * Get the images that belong to this group.
@@ -53,7 +65,7 @@ public:
 
 protected:
     std::vector<ImagePtr> images;
-    
+
     Histogram hg;
 
     ImageGroup() {} 

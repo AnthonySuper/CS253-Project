@@ -19,18 +19,7 @@ images{im}, hg{im->getHistogram()}
 {
 }
 
-double ImageGroup::similarityTo(ImageGroup& o, const PerceptionTrainer& pt)
-{
-    double sum = 0;
-    for(const Perception& p: pt.getPerceptions()) {
-        double vala = p.getValue(hg);
-        double valb = p.getValue(o.hg);
-        double under = (vala - valb) + 0.001;
-        under = under*under;
-        sum += 1 / under;
-    }
-    return sum;
-}
+
 
 int ImageGroup::getMostOccuringClassCount() const {
     std::unordered_map<int, int> m;

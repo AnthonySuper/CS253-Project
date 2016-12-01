@@ -36,6 +36,7 @@ void ImageGrouper::mergeGroups(int first,
             badIndexes.emplace_back(i);
         }
     }
+    badIndexes.emplace_back(first);
     for(auto i: badIndexes) {
         auto& g1 = groups.at(i);
         for(int k = 0; k < groups.size(); ++k){
@@ -45,6 +46,7 @@ void ImageGrouper::mergeGroups(int first,
             auto &g2 = groups.at(k);
             double sim = g1.group.similarityTo(g2.group, pt);
             g1.compareSimilarity(k, sim);
+            g2.compareSimilarity(i, sim);
         }
     }
 }
