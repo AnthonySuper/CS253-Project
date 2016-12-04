@@ -1,8 +1,8 @@
-CXX := clang++
+CXX := g++
 OBJDIR := ./obj
 SRCDIR := ./src
 TESTDIR := ./test_srcs
-CXXFLAGS := -Iinclude -std=c++14 -Wall -O3 -ffast-math
+CXXFLAGS := -Iinclude -std=c++14 -Wall -O3 -ffast-math -march=native
 LDFLAGS := -pthread
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
