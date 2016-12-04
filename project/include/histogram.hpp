@@ -53,6 +53,18 @@ public:
      */
     inline const BinType& getBins() const { return bins; }
 
+    inline void inc(int in) {
+        ++numNumbers;
+        bins[std::floor(in / 4.0)]++;
+    }
+
+    inline void finalize() {
+        double n = (double) numNumbers;
+        for(int i = 0; i < binCount; ++i) {
+            normalizedBins[i] = bins[i] / n;
+        }
+    }
+
     /**
      * Obtain a reference to the normalized bins in this histogram.
      */
@@ -79,6 +91,7 @@ public:
 protected:
     BinType bins;
     NormalizedBinType normalizedBins;
+    int numNumbers = 0;
 };
 
 #endif

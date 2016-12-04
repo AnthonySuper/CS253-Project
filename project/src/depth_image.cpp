@@ -9,7 +9,6 @@ static void depthError(int in) {
 DepthImage::DepthImage(std::string filename) :
     fileName(filename)
 {
-    pixelData.reserve(128 * 128);
     std::ifstream f(filename);
     f >> std::noskipws;
     int maxValue;
@@ -38,15 +37,12 @@ DepthImage::DepthImage(std::string filename) :
         if(i < 0 || i > 255) {
             throw BadNumberError(i);
         }
-        pixelData.emplace_back(static_cast<uint8_t>(i));
+        histogram.inc(i);
     }
     if(! f.eof()) {
         throw InvalidFormatError("[2] Read a non-number!");
     }
-    if(pixelData.size() != (unsigned int) height * width) {
-        throw InvalidFormatError("File's list of ints is too big or small");
-    }
-    histogram = Histogram{pixelData};
+    histogram.finalize();
 }
 
 DepthImage::DepthImage(DepthImage&& o) :
