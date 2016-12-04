@@ -9,9 +9,27 @@ ImageDataset ImageDataset::fromFile(std::string fname) {
     }
     std::string s;
     while(f.is_open() && f >> s) {
-        futures.emplace_back(std::async([=](std::string s) {
+        futures.emplace_back(std::async(std::launch::deferred,
+                    [=](std::string s) {
             return std::make_shared<DepthImage>(s);
         }, s));
+    }
+    std::vector<std::thread> threads;
+    std::atomic<int> ind(0);
+    auto ptr = &ind;
+    const int max = futures.size();
+    for(int i = 0; i < std::thread::hardware_concurrency(); ++i) {
+        threads.emplace_back([&] {
+                    for(int a = 0; a < max; a = ind.fetch_add(1)){
+                      if(! (a < max)) {
+                        return;
+                      }
+                      futures[a].wait();;
+                    }
+                });
+    }
+    for(auto& t: threads) {
+        t.join();
     }
     for(auto &f: futures) {
         ds.emplace_back(f.get());
