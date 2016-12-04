@@ -29,19 +29,47 @@ DepthImage::DepthImage(std::string filename) :
     if(height < 0 || width < 0) {
         throw InvalidFormatError("Height or width impossible");
     }
-    int i;
-    while(! f.eof() && f >> i) {
-        if(f.fail()) {
-            throw InvalidFormatError("[1] Read a non-number!");
-        }
-        if(i < 0 || i > 255) {
-            throw BadNumberError(i);
-        }
-        histogram.inc(i);
+    auto currentPos = f.tellg();
+    if(currentPos == -1) {
+        throw std::runtime_error("Not supported!");
     }
-    if(! f.eof()) {
-        throw InvalidFormatError("[2] Read a non-number!");
+    auto rdbuff = f.rdbuf();
+    auto size = rdbuff->pubseekoff(0, f.end, f.in);
+    rdbuff->pubseekoff(currentPos, f.beg);
+    size_t buffSize = size - currentPos;
+    char *buff = new char[buffSize];
+    rdbuff->sgetn(buff, buffSize);
+    char *scan = buff;
+    int tmp = -1;
+    for(auto scan = buff; scan != buff + buffSize; scan++) {
+        if(*scan == '\n' || *scan == '\t' || *scan == ' ') {
+            if(tmp > -1) {
+                if(tmp <= 255) {
+                    histogram.inc(tmp);
+                    tmp = -1;
+                }
+                else {
+                    std::cout << "Got a tmp of " << tmp << std::endl;
+                    throw std::runtime_error("Bad format: " + std::to_string(tmp));
+                    delete[] buff;
+                }
+            }
+        }
+        else if(*scan >= '0' && *scan <= '9') {
+            if(tmp == -1) {
+                tmp = 0;
+            }
+            tmp = tmp * 10 + static_cast<int>((*scan - '0'));
+        }
+        else {
+            delete[] buff;
+            throw std::runtime_error("Failure will robinson!");
+        }
     }
+    if(tmp > -1) {
+        histogram.inc(tmp);
+    }
+    delete[] scan;
     histogram.finalize();
 }
 
