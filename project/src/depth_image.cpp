@@ -6,42 +6,96 @@ static void depthError(int in) {
     throw InvalidFormatError(s.str());
 }
 
-DepthImage::DepthImage(std::string filename) :
+
+struct FileBuff {
+    char *begin;
+    char *end;
+    int fd;
+    size_t size;
+    
+    FileBuff() {
+        begin = nullptr;
+        end = nullptr;
+        fd = -1;
+    }
+    
+    inline void readFile(const std::string& fname) {
+        unmap();
+        fd = open(fname.c_str(), O_RDWR);
+        if(fd <= 0) {
+            throw std::runtime_error("Could not open!");
+        }
+        struct stat s;
+        fstat(fd, &s);
+        size = s.st_size;
+        auto ptr = mmap(nullptr,
+                      size,
+                      PROT_READ,
+                      MAP_PRIVATE,
+                      fd,
+                      0);
+        if(reinterpret_cast<long>(ptr) == -1) {
+            throw std::runtime_error("Could not read!");
+        }
+        begin = static_cast<char *>(ptr);
+        end = begin + size;
+    }
+    
+    ~FileBuff() {
+        unmap();
+    }
+    
+    inline void unmap() {
+        if(fd > 0) {
+            close(fd);
+        }
+        if(begin != nullptr) {
+            munmap(static_cast<void *>(begin), size);
+        }
+    }
+};
+
+
+DepthImage::DepthImage(const std::string& filename) :
     fileName(filename)
 {
-    std::ifstream f(filename);
-    f >> std::noskipws;
-    int maxValue;
-    char c1 = '\0', c2 = '\0';
-    f >> c1;
-    f >> c2;
-    if(c1 != 'P' || c2 != '2') {
+    thread_local FileBuff fb;
+    fb.readFile(filename);
+    auto b = fb.begin;
+    
+    if(*(b++) != 'P' || *(b++) != '2') {
         throw InvalidFormatError("File lacked proper header");
     }
-    f >> std::skipws;
-    // whitespace is now allowed again
-    if(! (f >> width) || ! (f >> height) || ! (f >> maxValue)) {
-        throw InvalidFormatError("Width, Height, or max value not given");
-    }
+    auto skipWS = [&] {
+        while(*b == '\n' || *b == '\t' || *b == ' ')
+            b++;
+    };
+    
+    auto readVal = [&] {
+        int tmp = 0;
+        while(*b >= '0' && *b <= '9') {
+            tmp = tmp * 10 + static_cast<int>((*b - '0'));
+            ++b;
+        }
+        return tmp;
+    };
+    
+    skipWS();
+    int width = readVal();
+    skipWS();
+    int height = readVal();
+    skipWS();
+    int maxValue = readVal();
+    skipWS();
+    
     if(maxValue != 255) {
         depthError(maxValue);
     }
     if(height < 0 || width < 0) {
         throw InvalidFormatError("Height or width impossible");
     }
-    auto currentPos = f.tellg();
-    if(currentPos == -1) {
-        throw std::runtime_error("Not supported!");
-    }
-    auto rdbuff = f.rdbuf();
-    auto size = rdbuff->pubseekoff(0, f.end, f.in);
-    rdbuff->pubseekoff(currentPos, f.beg);
-    size_t buffSize = size - currentPos;
-    char *buff = new char[buffSize];
-    rdbuff->sgetn(buff, buffSize);
-    char *scan = buff;
     int tmp = -1;
-    for(auto scan = buff; scan != buff + buffSize; scan++) {
+    for(auto scan = b; scan != fb.end; scan++) {
         if(*scan == '\n' || *scan == '\t' || *scan == ' ') {
             if(tmp > -1) {
                 if(tmp <= 255) {
@@ -51,7 +105,6 @@ DepthImage::DepthImage(std::string filename) :
                 else {
                     std::cout << "Got a tmp of " << tmp << std::endl;
                     throw std::runtime_error("Bad format: " + std::to_string(tmp));
-                    delete[] buff;
                 }
             }
         }
@@ -62,14 +115,12 @@ DepthImage::DepthImage(std::string filename) :
             tmp = tmp * 10 + static_cast<int>((*scan - '0'));
         }
         else {
-            delete[] buff;
             throw std::runtime_error("Failure will robinson!");
         }
     }
     if(tmp > -1) {
         histogram.inc(tmp);
     }
-    delete[] scan;
     histogram.finalize();
 }
 

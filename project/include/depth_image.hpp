@@ -9,9 +9,11 @@
 #include <sstream>
 #include <regex>
 #include <cstdint>
-
-
-
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 /**
  * A DepthImage represents, as the name implies, a depth-based image.
@@ -32,7 +34,7 @@ public:
      * \throws FileNotFoundError in case the file is invalid
      * \throws InvalidFormatError when the file is not a valid PGM image
      */
-    DepthImage(std::string filename);
+    DepthImage(const std::string& filename);
     /**
      * Standard move constructor.
      */
