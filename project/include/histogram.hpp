@@ -36,7 +36,7 @@ public:
      * This adds their binned values together bin-wise, then calculates the
      * new averages for each bin.
      */
-    Histogram(const Histogram& h1, const Histogram &h2) :
+    inline Histogram(const Histogram& h1, const Histogram &h2) :
     bins{},
     normalizedBins{},
     numNumbers(h1.numNumbers + h2.numNumbers)
