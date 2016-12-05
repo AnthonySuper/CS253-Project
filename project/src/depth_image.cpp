@@ -72,7 +72,7 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
             throw std::runtime_error("Failure will robinson!");
         }
     }
-    if(tmp > -1) {
+    if(tmp > -1 && tmp < 255) {
         histogram.inc(tmp);
     }
     histogram.finalize();

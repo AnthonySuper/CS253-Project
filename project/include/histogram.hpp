@@ -76,7 +76,7 @@ public:
 
     inline void inc(int in) {
         ++numNumbers;
-        bins[std::floor(in / 4.0)]++;
+        bins[numToIndex(in)]++;
     }
 
     inline void finalize() {
@@ -118,7 +118,13 @@ public:
      * See if two histograms are exactly the same
      */
     bool operator==(const Histogram&o) const;
-               
+    
+    static int numToIndex(int index) {
+        return lookup[index];
+    }
+    
+    static const int lookup[];
+    
 protected:
     BinType bins;
     NormalizedBinType normalizedBins;
