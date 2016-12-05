@@ -18,7 +18,14 @@ public:
         return sum + bias;
     }
     
-    void train(const Histogram &h, int d);
+    inline void train(const Histogram &h, int d) {
+        auto &b = h.getNormalizedBins();
+        double y = getValue(h);
+        for(int i = 0; i < binCount; ++i) {
+            bins[i] = bins[i] + ((d - y) * b[i]);
+        }
+        bias = bias + (static_cast<double>(d) - y);
+    }
     
     Perception();
     
