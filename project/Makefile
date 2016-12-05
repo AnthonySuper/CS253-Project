@@ -2,7 +2,7 @@ CXX := g++
 OBJDIR := ./obj
 SRCDIR := ./src
 TESTDIR := ./test_srcs
-CXXFLAGS := -Iinclude -std=c++14 -Wall -Ofast -ffast-math -march=native
+CXXFLAGS := -Iinclude -std=c++14 -Wall -Ofast -ffast-math -march=native -g
 LDFLAGS := -pthread
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)

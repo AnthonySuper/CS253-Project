@@ -11,47 +11,49 @@ struct FileBuff {
     char *begin;
     char *end;
     int fd;
-    size_t size;
+    size_t buffSize;
+    size_t fileSize;
     
     FileBuff() {
         begin = nullptr;
         end = nullptr;
         fd = -1;
+        buffSize = 0;
     }
     
     inline void readFile(const std::string& fname) {
-        unmap();
         fd = open(fname.c_str(), O_RDONLY);
         if(fd <= 0) {
             throw std::runtime_error("Could not open!");
         }
         struct stat s;
         fstat(fd, &s);
-        size = s.st_size;
-        auto ptr = mmap(nullptr,
-                      size,
-                      PROT_READ,
-                      MAP_PRIVATE,
-                      fd,
-                      0);
-        if(reinterpret_cast<long>(ptr) == -1) {
-            throw std::runtime_error("Could not read!");
+        fileSize = s.st_size;
+        if(fileSize < buffSize || buffSize == 0) {
+            realloc();
         }
-        begin = static_cast<char *>(ptr);
-        end = begin + size;
-        madvise(ptr, size, MADV_WILLNEED);
+        end = begin + fileSize;
+        ssize_t rd = 0;
+        while(rd < fileSize) {
+            rd += read(fd, begin + rd, fileSize - rd);
+        }
+    }
+    
+    inline void realloc() {
+        if(begin != nullptr) {
+            std::free(begin);
+        }
+        buffSize = sizeof(char) * fileSize * 1.2;
+        begin = static_cast<char *>(std::malloc(buffSize));
+        end = begin + fileSize;
     }
     
     ~FileBuff() {
-        unmap();
-    }
-    
-    inline void unmap() {
         if(fd > 0) {
             close(fd);
         }
         if(begin != nullptr) {
-            munmap(static_cast<void *>(begin), size);
+            free(begin);
         }
     }
 };
@@ -60,7 +62,7 @@ struct FileBuff {
 DepthImage::DepthImage(const std::string& filename) :
     fileName(filename)
 {
-    FileBuff fb;
+    thread_local FileBuff fb;
     fb.readFile(filename);
     auto b = fb.begin;
     
