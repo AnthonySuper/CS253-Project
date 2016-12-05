@@ -16,7 +16,6 @@ ImageDataset ImageDataset::fromFile(std::string fname) {
     }
     std::vector<std::thread> threads;
     std::atomic<int> ind(0);
-    auto ptr = &ind;
     const int max = futures.size();
     for(int i = 0; i < std::thread::hardware_concurrency(); ++i) {
         threads.emplace_back([&] {

@@ -31,10 +31,14 @@ void ImageGrouper::mergeGroups(int first,
     std::vector<unsigned int> badIndexes;
     for(unsigned int i = 0; i < groups.size(); ++i) {
         auto &g = groups.at(i);
-        if(g.nearestIndex >= second - 1 || g.nearestIndex == first) {
+        if(g.nearestIndex == first || g.nearestIndex == second) {
             g.resetSimilarity();
             badIndexes.emplace_back(i);
         }
+        else if(g.nearestIndex >= second - 1) {
+            g.nearestIndex--;
+        }
+        
     }
     badIndexes.emplace_back(first);
     for(auto i: badIndexes) {
