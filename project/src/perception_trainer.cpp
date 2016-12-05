@@ -4,7 +4,7 @@ static Perception trainPerception(const ImageDataset& ds, int itrCount, int klas
     Perception p;
     for(int i = 0; i < itrCount; ++i) {
         for(int j = 0; j < ds.size(); ++j) {
-            const auto& img = ds.refAt(i);
+            const auto& img = ds.refAt(j);
             int c = ((img.getCategory() == klass) ? 1 : -1);
             p.train(img.getHistogram(), c);
         }
@@ -14,15 +14,19 @@ static Perception trainPerception(const ImageDataset& ds, int itrCount, int klas
 
 PerceptionTrainer::PerceptionTrainer(ImageDataset &ds, int count)
 {
-    std::vector<std::future<Perception>> futures;
-    futures.reserve(ds.getClassList().size());
+    auto& cl = ds.getClassList();
+    std::vector<std::thread> threads;
+    threads.reserve(cl.size());
+    std::mutex dsmut;
     for(auto klass: ds.getClassList()) {
-        futures.emplace_back(std::async([=, &ds](int klass){
-            return trainPerception(ds, count, klass);
-        }, klass));
+        threads.emplace_back([=, &ds, &dsmut](int klass){
+            auto q = trainPerception(ds, count, klass);
+            std::lock_guard<std::mutex> lock(dsmut);
+            perceptions.emplace_back(std::move(q));
+        }, klass);
     }
-    for(auto& ft: futures) {
-        perceptions.emplace_back(ft.get());
+    for(auto& t: threads) {
+        t.join();
     }
 }
 

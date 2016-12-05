@@ -5,6 +5,8 @@
 #include <vector>
 #include <thread>
 #include <future>
+#include <thread>
+#include <mutex>
 
 class PerceptionTrainer {
 public:

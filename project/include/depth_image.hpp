@@ -137,6 +137,29 @@ public:
      * Obtain the numerical category of the image.
      */
     inline int getCategory() const {
+        if(category > 0) {
+            return category;
+        }
+        auto gc = [&](){
+            if(category > -1) {
+                return category;
+            }
+            const char *end = fileName + nameSize;
+            while(*end != 's') {
+                end--;
+                if(end == fileName) {
+                    throw std::runtime_error("Invalid name, can't find class");
+                }
+            }
+            end++;
+            int tmp = 0;
+            while(*end >= '0' && *end <= '9') {
+                tmp = tmp * 10 + (*end -  '0');
+                end++;
+            }
+            return tmp;
+        };
+        category = gc();
         return category;
     }
     /**
@@ -151,7 +174,7 @@ protected:
     int width;
     std::vector<uint8_t> pixelData;
     Histogram histogram;
-    int category = -2;
+    mutable int category = -2;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const DepthImage& i) {

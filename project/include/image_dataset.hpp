@@ -65,10 +65,6 @@ public:
     inline const std::set<int>& getClassList() const {
         return classList;
     }
-    
-    inline std::set<int> getClassList() {
-        return classList;
-    }
 
     ImageDataset() = default;
 

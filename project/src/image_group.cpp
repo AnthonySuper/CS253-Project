@@ -41,7 +41,8 @@ int ImageGroup::getMostOccuringClassCount() const {
 
 void ImageGroup::merge(ImageGroup& other) {
     hg.merge(other.hg);
-    images.insert(images.end(),
-                  other.images.begin(),
-                  other.images.end());
+    images.reserve(images.size() + other.images.size());
+    std::move(other.images.begin(),
+              other.images.end(),
+              std::back_inserter(images));
 }

@@ -10,6 +10,7 @@
 #include <typeinfo>
 #include <iostream>
 #include <unordered_map>
+#include <algorithm>
 
 /**
  * Represents a group of images, which are most likely similar to each other.
