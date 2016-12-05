@@ -23,10 +23,11 @@ ImageDataset ImageDataset::fromFile(FileBuff &buff) {
     std::vector<std::thread> threads;
     std::atomic<int> ind(0);
     const int max = names.size();
+    auto order = std::memory_order::memory_order_relaxed;
     for(int i = 0; i < std::thread::hardware_concurrency(); ++i) {
         threads.emplace_back([&] {
                     FileBuff fb;
-                    for(int a = 0; a < max; a = ind.fetch_add(1)){
+                    for(int a = 0; a < max; a = ind.fetch_add(1, order)){
                       if(a < max) {
                           auto tuple  = names[a];
                           auto name = std::get<0>(tuple);
