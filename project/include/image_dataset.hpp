@@ -28,6 +28,10 @@ public:
     size_t size() {
         return images.size();
     }
+    
+    void reserve(size_t size) {
+        images.reserve(size);
+    }
 
     const std::vector<ImagePtr>& getImages() const {
         return images;

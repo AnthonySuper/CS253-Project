@@ -18,6 +18,7 @@ ImageDataset ImageDataset::fromFile(FileBuff &buff) {
         *ptr = '\0';
         names.emplace_back(chase);
     }
+    ds.reserve(names.size());
     std::mutex dsmut;
     std::vector<std::thread> threads;
     std::atomic<int> ind(0);
