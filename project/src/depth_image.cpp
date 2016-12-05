@@ -39,6 +39,7 @@ struct FileBuff {
         }
         begin = static_cast<char *>(ptr);
         end = begin + size;
+        madvise(ptr, size, MADV_SEQUENTIAL);
     }
     
     ~FileBuff() {
