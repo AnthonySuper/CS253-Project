@@ -59,7 +59,7 @@ struct FileBuff {
 DepthImage::DepthImage(const std::string& filename) :
     fileName(filename)
 {
-    thread_local FileBuff fb;
+    FileBuff fb;
     fb.readFile(filename);
     auto b = fb.begin;
     
