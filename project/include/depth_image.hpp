@@ -136,7 +136,9 @@ public:
     /**
      * Obtain the numerical category of the image.
      */
-    int getCategory();
+    inline int getCategory() {
+        return category;
+    }
     /**
      * Convert this DepthImage to a string, which provides some debugging
      * information.

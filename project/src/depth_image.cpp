@@ -128,6 +128,3 @@ double DepthImage::minimumSumComparison(const DepthImage& o) const {
     return histogram.minimumSum(o.histogram);
 }
 
-int DepthImage::getCategory() {
-    return category;
-}
