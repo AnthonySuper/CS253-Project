@@ -21,7 +21,7 @@ struct FileBuff {
     
     inline void readFile(const std::string& fname) {
         unmap();
-        fd = open(fname.c_str(), O_RDWR);
+        fd = open(fname.c_str(), O_RDONLY);
         if(fd <= 0) {
             throw std::runtime_error("Could not open!");
         }
