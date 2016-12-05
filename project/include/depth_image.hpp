@@ -61,7 +61,7 @@ struct FileBuff {
             std::free(begin);
         }
         // give us extra space
-        buffSize = sizeof(char) * fileSize + 1028*2;
+        buffSize = (sizeof(char) * fileSize) + 1028*2;
         begin = static_cast<char *>(std::malloc(buffSize));
         end = begin + fileSize;
     }
