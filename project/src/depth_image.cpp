@@ -31,7 +31,7 @@ struct FileBuff {
         auto ptr = mmap(nullptr,
                       size,
                       PROT_READ,
-                      MAP_SHARED,
+                      MAP_PRIVATE,
                       fd,
                       0);
         if(reinterpret_cast<long>(ptr) == -1) {
