@@ -1,48 +1,47 @@
 #include <image_dataset.hpp>
 
-ImageDataset ImageDataset::fromFile(std::string fname) {
+ImageDataset ImageDataset::fromFile(FileBuff &buff) {
     ImageDataset ds;
-    std::ifstream f{fname};
-    std::vector<std::future<std::shared_ptr<DepthImage>>> futures;
-    if(! f.is_open()) {
-        throw FileNotFoundError(fname);
+    std::vector<const char *> names;
+    char *ptr = buff.begin;
+    char *chase = ptr;
+    while(ptr != buff.end) {
+        ptr++;
+        if(*ptr == ' ' || *ptr == '\n' || *ptr == '\t') {
+            if(chase != ptr) {
+                *ptr = '\0';
+                names.emplace_back(chase);
+            }
+        }
     }
-    std::string s;
-    while(f.is_open() && f >> s) {
-        futures.emplace_back(std::async(std::launch::deferred,
-                    [=](std::string s) {
-            return std::make_shared<DepthImage>(s);
-        }, s));
+    if(chase != ptr) {
+        *ptr = '\0';
+        names.emplace_back(chase);
     }
+    std::mutex dsmut;
     std::vector<std::thread> threads;
     std::atomic<int> ind(0);
-    const int max = futures.size();
+    const int max = names.size();
     for(int i = 0; i < std::thread::hardware_concurrency(); ++i) {
         threads.emplace_back([&] {
+                    FileBuff fb;
                     for(int a = 0; a < max; a = ind.fetch_add(1)){
-                      if(! (a < max)) {
-                        return;
+                      if(a < max) {
+                          auto ptr = std::make_shared<DepthImage>(names[a], fb);
+                          std::lock_guard<std::mutex> lock(dsmut);
+                          ds.emplace_back(ptr);
                       }
-                      futures[a].wait();;
                     }
                 });
     }
     for(auto& t: threads) {
         t.join();
     }
-    for(auto &f: futures) {
-        ds.emplace_back(f.get());
-    }
     return ds;
 }
 
 void ImageDataset::emplace_back(ImagePtr ip) {
     images.emplace_back(ip);
-}
-
-void ImageDataset::emplace_back(std::string fname) {
-    images.emplace_back(std::make_shared<DepthImage>(fname));
-    addClass(images.at(images.size() - 1)->getCategory());
 }
 
 void ImageDataset::emplace_back(const DepthImage& img) {

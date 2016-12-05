@@ -17,9 +17,7 @@ class ImageDataset {
 public:
     using ImagePtr = std::shared_ptr<DepthImage>;
 
-    static ImageDataset fromFile(std::string fname);
-
-    void emplace_back(std::string fname);
+    static ImageDataset fromFile(FileBuff &fb);
 
     void emplace_back(const DepthImage& img);
     

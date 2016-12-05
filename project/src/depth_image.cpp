@@ -7,63 +7,11 @@ static void depthError(int in) {
 }
 
 
-struct FileBuff {
-    char *begin;
-    char *end;
-    int fd;
-    size_t buffSize;
-    size_t fileSize;
-    
-    FileBuff() {
-        begin = nullptr;
-        end = nullptr;
-        fd = -1;
-        buffSize = 0;
-    }
-    
-    inline void readFile(const std::string& fname) {
-        fd = open(fname.c_str(), O_RDONLY);
-        if(fd <= 0) {
-            throw std::runtime_error("Could not open!");
-        }
-        struct stat s;
-        fstat(fd, &s);
-        fileSize = s.st_size;
-        if(fileSize < buffSize || buffSize == 0) {
-            realloc();
-        }
-        end = begin + fileSize;
-        ssize_t rd = 0;
-        while(rd < fileSize) {
-            rd += read(fd, begin + rd, fileSize - rd);
-        }
-    }
-    
-    inline void realloc() {
-        if(begin != nullptr) {
-            std::free(begin);
-        }
-        buffSize = sizeof(char) * fileSize * 1.2;
-        begin = static_cast<char *>(std::malloc(buffSize));
-        end = begin + fileSize;
-    }
-    
-    ~FileBuff() {
-        if(fd > 0) {
-            close(fd);
-        }
-        if(begin != nullptr) {
-            free(begin);
-        }
-    }
-};
 
-
-DepthImage::DepthImage(const std::string& filename) :
-    fileName(filename)
+DepthImage::DepthImage(const char *fname, FileBuff& fb) :
+    fileName(fname)
 {
-    thread_local FileBuff fb;
-    fb.readFile(filename);
+    fb.readFile(fname);
     auto b = fb.begin;
     
     if(*(b++) != 'P' || *(b++) != '2') {
@@ -161,9 +109,10 @@ int DepthImage::getCategory() {
     if(category > 0) {
         return category;
     }
+    std::string fname(fileName);
     std::regex r("class(\\d+)_.*?\\.pgm");
     std::smatch sm;
-    if(! std::regex_search(fileName, sm, r)) {
+    if(! std::regex_search(fname, sm, r)) {
         throw std::runtime_error("DepthImage has no file name!");
     }
     if(sm.size() != 2) {

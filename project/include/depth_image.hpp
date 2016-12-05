@@ -15,6 +15,66 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+struct FileBuff {
+    char *begin;
+    char *end;
+    int fd;
+    size_t buffSize;
+    size_t fileSize;
+    
+    FileBuff() {
+        begin = nullptr;
+        end = nullptr;
+        fd = -1;
+        buffSize = 0;
+    }
+    
+    inline void readFile(const std::string &f) {
+        readFile(f.c_str());
+    }
+    
+    inline void readFile(const char *ptr) {
+        if(fd != 0) {
+            close(fd);
+        }
+        fd = open(ptr, O_RDONLY);
+        if(fd <= 0) {
+            throw std::runtime_error("Could not open!");
+        }
+        struct stat s;
+        fstat(fd, &s);
+        fileSize = s.st_size;
+        if(fileSize < buffSize || buffSize == 0) {
+            realloc();
+        }
+        end = begin + fileSize;
+        ssize_t rd = 0;
+        while(rd < fileSize) {
+            rd += read(fd, begin + rd, fileSize - rd);
+        }
+    }
+    
+    inline void realloc() {
+        if(begin != nullptr) {
+            std::free(begin);
+        }
+        buffSize = sizeof(char) * fileSize * 1.2;
+        begin = static_cast<char *>(std::malloc(buffSize));
+        end = begin + fileSize;
+    }
+    
+    ~FileBuff() {
+        if(fd > 0) {
+            close(fd);
+        }
+        if(begin != nullptr) {
+            free(begin);
+        }
+    }
+};
+
+
+
 /**
  * A DepthImage represents, as the name implies, a depth-based image.
  * It contains the pixel data, height, width, and other information for these
@@ -34,7 +94,7 @@ public:
      * \throws FileNotFoundError in case the file is invalid
      * \throws InvalidFormatError when the file is not a valid PGM image
      */
-    DepthImage(const std::string& filename);
+    DepthImage(const char *fname, FileBuff &);
     /**
      * Standard move constructor.
      */
@@ -68,13 +128,8 @@ public:
      * Obtain a reference to the histogram made from this DepthImage
      */
     inline const Histogram& getHistogram() const { return histogram; }
-    /**
-     * Obtain the filename this DepthImage was originally read from.
-     * If the filename is "", this means that the DepthImage was created
-     * via other means (currently not possible)
-     */
-    inline const std::string& getFileName() const { return fileName; }
 
+    inline const char * getFileName() const { return fileName; }
     /**
      * Obtain the numerical category of the image.
      */
@@ -85,7 +140,7 @@ public:
      */
     explicit operator std::string() const;
 protected:
-    std::string fileName;
+    const char *fileName;
     int height;
     int width;
     std::vector<uint8_t> pixelData;
