@@ -23,7 +23,6 @@ struct FileBuff {
     size_t buffSize;
     size_t fileSize;
     
-    static std::mutex mut;
     
     FileBuff() {
         begin = nullptr;
@@ -52,7 +51,6 @@ struct FileBuff {
         }
         end = begin + fileSize;
         ssize_t rd = 0;
-        std::lock_guard<std::mutex> guard(mut);
         while(rd < fileSize) {
             rd += read(fd, begin + rd, fileSize - rd);
         }
