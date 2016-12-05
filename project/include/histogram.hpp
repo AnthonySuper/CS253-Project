@@ -36,11 +36,32 @@ public:
      * This adds their binned values together bin-wise, then calculates the
      * new averages for each bin.
      */
-    Histogram(const Histogram& h1, const Histogram &h2);
+    Histogram(const Histogram& h1, const Histogram &h2) :
+    bins{},
+    normalizedBins{},
+    numNumbers(h1.numNumbers + h2.numNumbers)
+    {
+        auto bins1 = h1.getBins();
+        auto bins2 = h2.getBins();
+        for(unsigned int i = 0; i < binCount; ++i) {
+            bins[i] = bins1[i] + bins2[i];
+        }
+        for(unsigned int i = 0; i < binCount; ++i) {
+            normalizedBins[i] = bins[i] / (double) numNumbers;
+        }
+    }
+    
     /**
      * Default constructor merely constructs a bunch of zero-valued bins.
      */
     Histogram();
+    
+    Histogram(Histogram &&o) = default;
+    Histogram& operator=(const Histogram &o) = default;
+    Histogram& operator=(Histogram &&o) = default;
+    
+    Histogram(const Histogram &o) :
+    bins(o.bins), normalizedBins(o.normalizedBins), numNumbers(o.numNumbers) {}
 
     /**
      * Print a stem-and-leaf chart to standard output. 
@@ -62,6 +83,16 @@ public:
         double n = (double) numNumbers;
         for(unsigned int i = 0; i < binCount; ++i) {
             normalizedBins[i] = bins[i] / n;
+        }
+    }
+    
+    inline void merge(const Histogram &o) {
+        numNumbers += o.numNumbers;
+        for(unsigned int i = 0; i < binCount; ++i) {
+            bins[i] += o.bins[i];
+        }
+        for(unsigned int i = 0; i < binCount; ++i) {
+            normalizedBins[i] = (double) bins[i] / numNumbers;
         }
     }
 

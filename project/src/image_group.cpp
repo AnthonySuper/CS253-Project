@@ -40,7 +40,7 @@ int ImageGroup::getMostOccuringClassCount() const {
 }
 
 void ImageGroup::merge(ImageGroup& other) {
-    hg = Histogram(hg, other.hg);
+    hg.merge(other.hg);
     images.insert(images.end(),
                   other.images.begin(),
                   other.images.end());

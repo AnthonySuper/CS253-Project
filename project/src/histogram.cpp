@@ -8,28 +8,16 @@ inline void numberCheck(int q) {
 
 Histogram::Histogram() :
     bins{},
-    normalizedBins{}
+    normalizedBins{},
+    numNumbers(0)
 {}
 
-Histogram::Histogram(const Histogram& h1, const Histogram &h2) :
-    bins{},
-    normalizedBins{}
-{
-    auto bins1 = h1.getBins();
-    auto bins2 = h2.getBins();
-    auto numNumbers = 0;
-    for(unsigned int i = 0; i < binCount; ++i) {
-        bins[i] = bins1[i] + bins2[i];
-        numNumbers += (bins1[i] + bins2[i]);
-    }
-    for(unsigned int i = 0; i < binCount; ++i) {
-        normalizedBins[i] = bins[i] / (double) numNumbers;
-    }
-}
+
 
 Histogram::Histogram(const std::vector<uint8_t> &numbers) :
     bins{},
-    normalizedBins{}
+    normalizedBins{},
+    numNumbers(numbers.size())
 {
     for(auto q: numbers) {
         numberCheck(q);

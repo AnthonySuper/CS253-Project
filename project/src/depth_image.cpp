@@ -130,11 +130,10 @@ DepthImage::DepthImage(DepthImage&& o) :
     height(o.height),
     width(o.width),
     pixelData(std::move(o.pixelData)),
-    histogram(o.histogram)
+    histogram(std::move(o.histogram))
 {
     o.height = 0;
     o.width = 0;
-    o.histogram = Histogram{};
 }
 
 DepthImage::DepthImage(const DepthImage &o) :
