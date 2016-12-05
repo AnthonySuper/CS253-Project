@@ -8,6 +8,8 @@ static void depthError(int in) {
 
 
 
+std::mutex FileBuff::mut;
+
 DepthImage::DepthImage(const char *fname, FileBuff& fb) :
     fileName(fname)
 {
