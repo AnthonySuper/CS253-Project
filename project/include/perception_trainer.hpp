@@ -8,17 +8,13 @@
 
 class PerceptionTrainer {
 public:
-    PerceptionTrainer(ImageDataset ds, int count = 100);
+    PerceptionTrainer(ImageDataset &ds, int count = 100);
 
     std::vector<Perception> getPerceptions() { return perceptions; }
     
     const std::vector<Perception>& getPerceptions() const { return perceptions; }
 
 private:
-    
-
-    
-    const ImageDataset ds;
     
     std::vector<Perception> perceptions;
 };

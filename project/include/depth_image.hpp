@@ -61,7 +61,7 @@ struct FileBuff {
             std::free(begin);
         }
         // give us extra space
-        buffSize = (sizeof(char) * fileSize) + 1028*2;
+        buffSize = (sizeof(char) * fileSize) + 1028*20;
         begin = static_cast<char *>(std::malloc(buffSize));
         end = begin + fileSize;
     }
@@ -136,7 +136,7 @@ public:
     /**
      * Obtain the numerical category of the image.
      */
-    inline int getCategory() {
+    inline int getCategory() const {
         return category;
     }
     /**

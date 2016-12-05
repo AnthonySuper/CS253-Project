@@ -25,12 +25,17 @@ public:
 
     ImagePtr at(int index);
 
-    size_t size() {
+    size_t size() const {
         return images.size();
     }
     
     void reserve(size_t size) {
         images.reserve(size);
+    }
+    
+    
+    inline const DepthImage& refAt(int i) const {
+        return *images.at(i);
     }
 
     const std::vector<ImagePtr>& getImages() const {
