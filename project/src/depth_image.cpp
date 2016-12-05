@@ -6,11 +6,13 @@ static void depthError(int in) {
     throw InvalidFormatError(s.str());
 }
 
+static inline bool isSpace(char c) {
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
 
 
-
-DepthImage::DepthImage(const char *fname, FileBuff& fb) :
-    fileName(fname)
+DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
+    fileName(fname), nameSize(fsize)
 {
     fb.readFile(fname);
     auto b = fb.begin;
@@ -19,7 +21,7 @@ DepthImage::DepthImage(const char *fname, FileBuff& fb) :
         throw InvalidFormatError("File lacked proper header");
     }
     auto skipWS = [&] {
-        while(*b == '\n' || *b == '\t' || *b == ' ')
+        while(isSpace(*b))
             b++;
     };
     
@@ -48,7 +50,7 @@ DepthImage::DepthImage(const char *fname, FileBuff& fb) :
     }
     int tmp = -1;
     for(auto scan = b; scan != fb.end; scan++) {
-        if(*scan == '\n' || *scan == '\t' || *scan == ' ') {
+        if(isSpace(*scan)) {
             if(tmp > -1) {
                 if(tmp <= 255) {
                     histogram.inc(tmp);
@@ -74,6 +76,7 @@ DepthImage::DepthImage(const char *fname, FileBuff& fb) :
         histogram.inc(tmp);
     }
     histogram.finalize();
+    getCategory(); // memoize category value
 }
 
 DepthImage::DepthImage(DepthImage&& o) :
@@ -107,20 +110,22 @@ double DepthImage::minimumSumComparison(const DepthImage& o) const {
 }
 
 int DepthImage::getCategory() {
-    if(category > 0) {
+    if(category > -1) {
         return category;
     }
-    std::string fname(fileName);
-    std::regex r("class(\\d+)_.*?\\.pgm");
-    std::smatch sm;
-    if(! std::regex_search(fname, sm, r)) {
-        throw std::runtime_error("DepthImage has no file name!");
+    const char *end = fileName + nameSize;
+    while(*end != 's') {
+        end--;
+        if(end == fileName) {
+            throw std::runtime_error("Invalid name, can't find class");
+        }
     }
-    if(sm.size() != 2) {
-        throw std::runtime_error("Regex somehow matched badly" \
-                " (this shouldn't happen)");
+    end++;
+    int tmp = 0;
+    while(*end >= '0' && *end <= '9') {
+        tmp = tmp * 10 + (*end -  '0');
+        end++;
     }
-    std::string s(sm[1]);
-    category = stoi(s);
+    category = tmp;
     return category;
 }

@@ -60,7 +60,8 @@ struct FileBuff {
         if(begin != nullptr) {
             std::free(begin);
         }
-        buffSize = sizeof(char) * fileSize * 1.2;
+        // give us extra space
+        buffSize = sizeof(char) * fileSize + 1028*2;
         begin = static_cast<char *>(std::malloc(buffSize));
         end = begin + fileSize;
     }
@@ -96,7 +97,7 @@ public:
      * \throws FileNotFoundError in case the file is invalid
      * \throws InvalidFormatError when the file is not a valid PGM image
      */
-    DepthImage(const char *fname, FileBuff &);
+    DepthImage(const char *fname, size_t nameSize, FileBuff &);
     /**
      * Standard move constructor.
      */
@@ -143,6 +144,7 @@ public:
     explicit operator std::string() const;
 protected:
     const char *fileName;
+    size_t nameSize;
     int height;
     int width;
     std::vector<uint8_t> pixelData;
