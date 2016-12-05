@@ -38,7 +38,6 @@ ImageDataset ImageDataset::fromFile(std::string fname) {
 
 void ImageDataset::emplace_back(ImagePtr ip) {
     images.emplace_back(ip);
-    addClass(ip->getCategory());
 }
 
 void ImageDataset::emplace_back(std::string fname) {
