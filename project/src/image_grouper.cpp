@@ -43,7 +43,7 @@ void ImageGrouper::mergeGroups(int first,
     badIndexes.emplace_back(first);
     for(auto i: badIndexes) {
         auto& g1 = groups.at(i);
-        for(int k = 0; k < groups.size(); ++k){
+        for(unsigned int k = i + 1; k < groups.size(); ++k){
             if(k == i) {
                 continue;
             }

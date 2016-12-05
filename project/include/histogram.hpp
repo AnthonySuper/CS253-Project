@@ -60,7 +60,7 @@ public:
 
     inline void finalize() {
         double n = (double) numNumbers;
-        for(int i = 0; i < binCount; ++i) {
+        for(unsigned int i = 0; i < binCount; ++i) {
             normalizedBins[i] = bins[i] / n;
         }
     }
