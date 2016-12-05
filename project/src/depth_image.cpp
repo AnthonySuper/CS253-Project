@@ -76,7 +76,26 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
         histogram.inc(tmp);
     }
     histogram.finalize();
-    getCategory(); // memoize category value
+    auto gc = [&](){
+        if(category > -1) {
+            return category;
+        }
+        const char *end = fileName + nameSize;
+        while(*end != 's') {
+            end--;
+            if(end == fileName) {
+                throw std::runtime_error("Invalid name, can't find class");
+            }
+        }
+        end++;
+        int tmp = 0;
+        while(*end >= '0' && *end <= '9') {
+            tmp = tmp * 10 + (*end -  '0');
+            end++;
+        }
+        return tmp;
+    };
+    category = gc();
 }
 
 DepthImage::DepthImage(DepthImage&& o) :
@@ -110,22 +129,5 @@ double DepthImage::minimumSumComparison(const DepthImage& o) const {
 }
 
 int DepthImage::getCategory() {
-    if(category > -1) {
-        return category;
-    }
-    const char *end = fileName + nameSize;
-    while(*end != 's') {
-        end--;
-        if(end == fileName) {
-            throw std::runtime_error("Invalid name, can't find class");
-        }
-    }
-    end++;
-    int tmp = 0;
-    while(*end >= '0' && *end <= '9') {
-        tmp = tmp * 10 + (*end -  '0');
-        end++;
-    }
-    category = tmp;
     return category;
 }
