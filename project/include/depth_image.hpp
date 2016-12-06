@@ -33,7 +33,7 @@ struct FileBuff {
         readFile(f.c_str());
     }
     
-    inline void readFile(const char *ptr) {
+    __attribute__((always_inline)) inline void readFile(const char *ptr) {
         /*
         FILE *fp = fopen(ptr, "r");
         struct stat s;

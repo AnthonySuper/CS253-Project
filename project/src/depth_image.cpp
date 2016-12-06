@@ -6,60 +6,24 @@ static void depthError(int in) {
     throw InvalidFormatError(s.str());
 }
 
-static inline bool isSpace(char c) {
-    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-}
 
+#define IS_SPACE(c)(c == ' ' || c == '\t' || c == '\n' || c == '\r')
 
 DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
     fileName(fname), nameSize(fsize)
 {
     fb.readFile(fname);
-    auto b = fb.begin;
-    
-    if(*(b++) != 'P' || *(b++) != '2') {
-        throw InvalidFormatError("File lacked proper header");
-    }
-    auto skipWS = [&] {
-        while(isSpace(*b))
-            b++;
-    };
-    
-    auto readVal = [&] {
-        int tmp = 0;
-        while(*b >= '0' && *b <= '9') {
-            tmp = tmp * 10 + static_cast<int>((*b - '0'));
-            ++b;
-        }
-        return tmp;
-    };
-    
-    skipWS();
-    int width = readVal();
-    skipWS();
-    int height = readVal();
-    skipWS();
-    int maxValue = readVal();
-    skipWS();
-    
-    if(maxValue != 255) {
-        depthError(maxValue);
-    }
-    if(height < 0 || width < 0) {
-        throw InvalidFormatError("Height or width impossible");
-    }
+    auto b = fb.begin + 2;
+    int numRead = 0;
     int tmp = -1;
     for(auto scan = b; scan != fb.end; ++scan) {
-        if(isSpace(*scan)) {
+        if(IS_SPACE(*scan)) {
             if(tmp != -1) {
-                if(tmp <= 255) {
+                if(numRead > 3) {
                     histogram.inc(tmp);
-                    tmp = -1;
                 }
-                else {
-                    std::cout << "Got a tmp of " << tmp << std::endl;
-                    throw std::runtime_error("Bad format: " + std::to_string(tmp));
-                }
+                tmp = -1;
+                numRead++;
             }
         }
         else if((unsigned char) *scan - '0' <= '9' - '0') {
