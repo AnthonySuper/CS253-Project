@@ -17,7 +17,7 @@
  */
 class ImageGroup {
 public:
-    using ImagePtr = std::shared_ptr<DepthImage>;
+    using ImagePtr = DepthImage*;
 
     friend std::ostream& operator<<(std::ostream&, const ImageGroup&);
 

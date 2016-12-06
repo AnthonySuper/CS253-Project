@@ -15,47 +15,64 @@
  */
 class ImageDataset {
 public:
-    using ImagePtr = std::shared_ptr<DepthImage>;
+    using ImagePtr = DepthImage*;
+    using iterator = DepthImage*;
+    using const_iterator = DepthImage const *;
 
-    static ImageDataset fromFile(FileBuff &fb);
-
-    void emplace_back(const DepthImage& img);
+    static std::unique_ptr<ImageDataset> fromFile(FileBuff &fb);
     
-    void emplace_back(ImagePtr);
-
-    ImagePtr at(int index);
+    ImageDataset(size_t size) {
+        imageBuffer = (DepthImage*) std::malloc(sizeof(*imageBuffer) * size);
+        _size = size;
+    }
+    
+    ImageDataset(const ImageDataset&) = delete;
+    ImageDataset(ImageDataset&) = delete;
+    
+    ImageDataset& operator=(ImageDataset &o) = delete;
+    
+    
+    ImageDataset(ImageDataset&& id);
+    
+    /*
+    ImageDataset& operator=(ImageDataset&& id) :
+        _size(id._size),
+        imageBuffer(id.imageBuffer),
+        classList(std::move(id.classList))
+    {
+        id._size = 0;
+        id.imageBuffer = nullptr;
+    }
+     */
+    
+    ~ImageDataset();
 
     size_t size() const {
-        return images.size();
+        return _size;
     }
-    
-    void reserve(size_t size) {
-        images.reserve(size);
-    }
-    
     
     inline const DepthImage& refAt(int i) const {
-        return *images.at(i);
+        return *(imageBuffer + i);
+    }
+    
+    inline DepthImage* ptrAt(int i) {
+        return (imageBuffer + i);
     }
 
-    const std::vector<ImagePtr>& getImages() const {
-        return images;
+    inline iterator begin() {
+        return imageBuffer;
     }
 
-    inline std::vector<ImagePtr>::iterator begin() {
-        return images.begin();
+    inline iterator end() {
+        return imageBuffer + _size + 1;
     }
 
-    inline std::vector<ImagePtr>::iterator end() {
-        return images.end();
+    inline const_iterator begin() const {
+        return imageBuffer;
     }
 
-    inline std::vector<ImagePtr>::const_iterator begin() const {
-        return images.begin();
-    }
-
-    inline std::vector<ImagePtr>::const_iterator end() const {
-        return images.end();
+    inline const_iterator end() const {
+        return imageBuffer + _size + 1;
     }
 
     inline bool hasClass(int i) const {
@@ -70,7 +87,8 @@ public:
 
 protected:
     void addClass(int);
-    std::vector<ImagePtr> images;
+    size_t _size;
+    DepthImage *imageBuffer;
     std::set<int> classList;
 };
 

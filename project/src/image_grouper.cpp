@@ -1,12 +1,11 @@
 #include <image_grouper.hpp>
 
-ImageGrouper::ImageGrouper(ImageDataset ds, PerceptionTrainer p) :
+ImageGrouper::ImageGrouper(ImageDataset &ds, PerceptionTrainer p) :
 pt(p)
 {
     groups.reserve(ds.size());
-    auto images = ds.getImages();
-    for(auto img: images) {
-        groups.emplace_back(img);
+    for(int i = 0; i < ds.size(); ++i) {
+        groups.emplace_back(ds.ptrAt(i));
     }
 }
 

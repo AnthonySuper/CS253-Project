@@ -76,7 +76,7 @@ public:
 
     inline void inc(int in) {
         ++numNumbers;
-        bins[numToIndex(in)]++;
+        bins[in >> 2]++;
     }
 
     inline void finalize() {
@@ -119,11 +119,6 @@ public:
      */
     bool operator==(const Histogram&o) const;
     
-    static int numToIndex(int index) {
-        return lookup[index];
-    }
-    
-    static const int lookup[];
     
 protected:
     BinType bins;

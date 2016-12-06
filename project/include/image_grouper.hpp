@@ -16,7 +16,7 @@ using std::vector;
 
 class ImageGrouper {
 public:
-    ImageGrouper(ImageDataset, PerceptionTrainer pt);
+    ImageGrouper(ImageDataset&, PerceptionTrainer pt);
     
     void reduceToGroupCount(int count);
     

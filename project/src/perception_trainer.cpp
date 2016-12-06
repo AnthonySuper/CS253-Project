@@ -18,7 +18,8 @@ PerceptionTrainer::PerceptionTrainer(ImageDataset &ds, int count)
     std::vector<std::thread> threads;
     threads.reserve(cl.size());
     std::mutex dsmut;
-    for(auto klass: ds.getClassList()) {
+    auto k = ds.getClassList();
+    for(auto klass: k) {
         threads.emplace_back([=, &ds, &dsmut](int klass){
             auto q = trainPerception(ds, count, klass);
             std::lock_guard<std::mutex> lock(dsmut);

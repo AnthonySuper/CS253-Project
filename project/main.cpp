@@ -26,11 +26,11 @@ int main(int argc, char *argv[]) {
         FileBuff dsf1, dsf2;
         dsf1.readFile(argv[1]);
         dsf2.readFile(argv[2]);
-        auto d = ImageDataset::fromFile(dsf1);
-        auto d2 = ImageDataset::fromFile(dsf2);
+        auto  d  = (ImageDataset::fromFile(dsf1));
+        auto  d2  = (ImageDataset::fromFile(dsf2));
         int gc = std::atoi(argv[3]);
-        PerceptionTrainer pt(d);
-        ImageGrouper g(d2, pt);
+        PerceptionTrainer pt(*d);
+        ImageGrouper g(*d2, pt);
         g.reduceToGroupCount(gc);
         std::cout << g << std::endl;
     //}

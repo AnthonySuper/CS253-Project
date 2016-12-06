@@ -14,7 +14,7 @@ ImageGroup::operator std::string() const {
     return ss.str();
 }
 
-ImageGroup::ImageGroup(std::shared_ptr<DepthImage> im) :
+ImageGroup::ImageGroup(ImagePtr im) :
 images{im}, hg{im->getHistogram()}
 {
 }

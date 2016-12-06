@@ -49,9 +49,9 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
         throw InvalidFormatError("Height or width impossible");
     }
     int tmp = -1;
-    for(auto scan = b; scan != fb.end; scan++) {
+    for(auto scan = b; scan != fb.end; ++scan) {
         if(isSpace(*scan)) {
-            if(tmp > -1) {
+            if(tmp != -1) {
                 if(tmp <= 255) {
                     histogram.inc(tmp);
                     tmp = -1;
@@ -62,11 +62,11 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
                 }
             }
         }
-        else if(*scan >= '0' && *scan <= '9') {
+        else if((unsigned char) *scan - '0' <= '9' - '0') {
             if(tmp == -1) {
                 tmp = 0;
             }
-            tmp = tmp * 10 + static_cast<int>((*scan - '0'));
+            tmp = tmp * 10 + ((*scan - '0'));
         }
         else {
             throw std::runtime_error("Failure will robinson!");
