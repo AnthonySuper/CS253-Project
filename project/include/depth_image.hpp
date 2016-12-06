@@ -34,6 +34,7 @@ struct FileBuff {
     }
     
     inline void readFile(const char *ptr) {
+        /*
         FILE *fp = fopen(ptr, "r");
         struct stat s;
         stat(ptr, &s);
@@ -45,7 +46,8 @@ struct FileBuff {
         while(rd < fileSize) {
             rd += fread(begin, 1, fileSize - rd, fp);
         }
-        /*
+         fclose(fp);
+        */
         int fd = open(ptr, O_RDONLY);
         if(fd <= 0) {
             throw std::runtime_error("Could not open!");
@@ -62,9 +64,6 @@ struct FileBuff {
             rd += read(fd, begin + rd, fileSize - rd);
         }
          close(fd);
-         */
-        fclose(fp);
-        
     }
     
     inline void realloc() {
