@@ -21,6 +21,7 @@ struct FileBuff {
     char *end;
     size_t buffSize;
     size_t fileSize;
+    int fd = -1;
     
     
     FileBuff() {
@@ -34,6 +35,7 @@ struct FileBuff {
     }
     
     __attribute__((always_inline)) inline void readFile(const char *ptr) {
+        closeIfNeeded();
         /*
         FILE *fp = fopen(ptr, "r");
         struct stat s;
@@ -48,22 +50,37 @@ struct FileBuff {
         }
          fclose(fp);
         */
-        int fd = open(ptr, O_RDONLY);
+        fd = open(ptr, O_RDONLY);
         if(fd <= 0) {
             throw std::runtime_error("Could not open!");
         }
         struct stat s;
         fstat(fd, &s);
         fileSize = s.st_size;
+        begin = (char *) mmap(nullptr,
+                              fileSize,
+                              PROT_READ | PROT_WRITE,
+                              MAP_PRIVATE,
+                              fd, 0);
+        madvise((void *) begin, fileSize, MADV_SEQUENTIAL);
+        /*
         if(fileSize > buffSize) {
             realloc();
         }
-        end = begin + fileSize;
         ssize_t rd = 0;
         while(rd < fileSize) {
             rd += read(fd, begin + rd, fileSize - rd);
         }
-         close(fd);
+         */
+        end = begin + fileSize;
+        // close(fd);
+    }
+    
+    inline void closeIfNeeded() {
+        if(fd > 0 && begin != nullptr) {
+            munmap((void *) begin, fileSize);
+            close(fd);
+        }
     }
     
     inline void realloc() {
@@ -77,9 +94,12 @@ struct FileBuff {
     }
     
     ~FileBuff() {
+        closeIfNeeded();
+        /*
         if(begin != nullptr) {
             free(begin);
         }
+         */
     }
 };
 

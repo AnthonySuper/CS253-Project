@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
         std::cerr << "Not enough arguments" << std::endl;
         return -1;
     }
-    //try {
+    try {
         /*
         auto d = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
         auto d2 = ImageDataset::fromFile("test_files/given/perceptron_train/correctfiles.txt");
@@ -33,11 +33,9 @@ int main(int argc, char *argv[]) {
         ImageGrouper g(*d2, pt);
         g.reduceToGroupCount(gc);
         std::cout << g << std::endl;
-    //}
-    /*
+    }
     catch(const std::exception &e) {
         std::cerr << typeid(e).name() << " " << e.what() << std::endl;
         return -1;
     }
-     */
 }

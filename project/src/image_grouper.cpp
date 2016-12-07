@@ -117,7 +117,7 @@ void ImageGrouper::calculateNearestNeighbor(int base,
 
 std::ostream& operator<<(std::ostream& os, const ImageGrouper &g) {
     for(auto& group: g.groups) {
-        os << group.group << std::endl;
+        os << group.group << std::endl << std::endl;
     }
     return os;
 }

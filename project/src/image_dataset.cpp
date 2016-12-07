@@ -11,6 +11,7 @@ std::unique_ptr<ImageDataset> ImageDataset::fromFile(FileBuff &buff) {
                 *ptr = '\0';
                 names.emplace_back(chase, ptr - chase - 1);
             }
+            chase = ptr + 1;
         }
     }
     if(chase != ptr) {
@@ -19,21 +20,27 @@ std::unique_ptr<ImageDataset> ImageDataset::fromFile(FileBuff &buff) {
     }
     
     std::mutex dsmut;
+    std::mutex counterMut;
     std::vector<std::thread> threads;
     std::atomic<int> ind(0);
     const int max = names.size();
-    auto order = std::memory_order::memory_order_relaxed;
     auto ds = std::make_unique<ImageDataset>(names.size());
     auto buffPtr = ds->imageBuffer;
     for(int i = 0; i < std::thread::hardware_concurrency(); ++i) {
         threads.emplace_back([&] {
                     FileBuff fb;
-                    for(int a = 0; a < max; a = ind.fetch_add(1, order)){
+
+                    for(int a = 0; a < max;){
+                        counterMut.lock();
+                        a = ind++;
+                        counterMut.unlock();
                       if(a < max) {
                           auto tuple  = names[a];
                           auto name = std::get<0>(tuple);
                           auto size = std::get<1>(tuple);
-                          auto di = new(buffPtr + a) DepthImage(name, size, fb);
+                          auto pl = buffPtr + a;
+
+                          auto di = new(pl) DepthImage(name, size, fb);
                           std::lock_guard<std::mutex> guard(dsmut);
                           ds->addClass(di->getCategory());
                       }

@@ -64,7 +64,7 @@ public:
     }
 
     inline iterator end() {
-        return imageBuffer + _size + 1;
+        return imageBuffer + _size;
     }
 
     inline const_iterator begin() const {
