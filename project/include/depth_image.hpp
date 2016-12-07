@@ -134,11 +134,6 @@ public:
      */
     DepthImage(const DepthImage &o);
     /**
-     * Compare two depth images by their minimum sum, which is 
-     * equivalent to the intersection of their histograms.
-     */
-    double minimumSumComparison(const DepthImage&) const;
-    /**
      * Obtain a reference to the histogram made from this DepthImage
      */
     inline const Histogram& getHistogram() const { return histogram; }

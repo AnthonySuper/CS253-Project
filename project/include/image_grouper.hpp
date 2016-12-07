@@ -56,6 +56,7 @@ protected:
     void mergeClosetGroups();
     vector<GroupHelper> groups;
     const PerceptionTrainer pt;
+    std::vector<unsigned int> badIndexes;
 };
 
 std::ostream& operator<<(std::ostream&,const ImageGroup&);

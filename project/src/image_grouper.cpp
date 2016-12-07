@@ -4,6 +4,7 @@ ImageGrouper::ImageGrouper(ImageDataset &ds, PerceptionTrainer p) :
 pt(p)
 {
     groups.reserve(ds.size());
+    badIndexes.reserve(ds.size());
     for(int i = 0; i < ds.size(); ++i) {
         groups.emplace_back(ds.ptrAt(i));
     }
@@ -28,19 +29,19 @@ void ImageGrouper::mergeGroups(int first,
     auto &secondGroup = groups.at(second);
     firstGroup.group.merge(secondGroup.group);
     groups.erase(groups.begin() + second);
-    std::vector<unsigned int> badIndexes;
+    badIndexes.clear();
     for(unsigned int i = 0; i < groups.size(); ++i) {
         auto &g = groups.at(i);
         if(g.nearestIndex == first || g.nearestIndex == second) {
             g.resetSimilarity();
-            badIndexes.emplace_back(i);
+            badIndexes.push_back(i);
         }
         else if(g.nearestIndex >= second - 1) {
             g.nearestIndex--;
         }
         
     }
-    badIndexes.emplace_back(first);
+    badIndexes.push_back(first);
     for(auto i: badIndexes) {
         auto& g1 = groups.at(i);
         for(unsigned int k = i + 1; k < groups.size(); ++k){

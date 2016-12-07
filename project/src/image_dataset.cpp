@@ -31,9 +31,9 @@ std::unique_ptr<ImageDataset> ImageDataset::fromFile(FileBuff &buff) {
                     FileBuff fb;
 
                     for(int a = 0; a < max;){
-                        counterMut.lock();
+                        // counterMut.lock();
                         a = ind++;
-                        counterMut.unlock();
+                        // counterMut.unlock();
                       if(a < max) {
                           auto tuple  = names[a];
                           auto name = std::get<0>(tuple);
