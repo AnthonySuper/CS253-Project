@@ -34,6 +34,7 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
             tmp = ((unsigned) tmp * 10) + c - '0';
         }
         ++scan;
+        __builtin_prefetch(scan);
     }
     if(tmp > -1 && tmp < 255) {
         histogram.inc(tmp);
