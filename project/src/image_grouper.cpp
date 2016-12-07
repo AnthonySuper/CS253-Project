@@ -14,8 +14,9 @@ void ImageGrouper::reduceToGroupCount(int count)
     if((unsigned int) count > groups.size() || count <= 0) {
         throw std::invalid_argument("Count is too large or negative");
     }
+    int iterationsReq = groups.size() - count;
     calculateNearestNeighbors();
-    while(groups.size() > (unsigned int) count) {
+    for(int i = 0; i < iterationsReq; ++i) {
         mergeClosetGroups();
     }
 }

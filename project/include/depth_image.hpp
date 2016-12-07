@@ -139,22 +139,6 @@ public:
      */
     double minimumSumComparison(const DepthImage&) const;
     /**
-     * Get the height of this DepthImage, in number of pixels.
-     * \return the height
-     */
-    inline int getHeight() const { return height; }
-    /**
-     * Get the width of this DepthImage, in number of pixels.
-     * \return the width
-     */
-    inline int getWidth() const { return width; }
-    /**
-     * Obtain the pixel data of this DepthImage.
-     * The vector should be considered in the context of the width and height
-     * of this DepthImage.
-     */
-    inline const std::vector<uint8_t>& getPixelData() const { return pixelData; }
-    /**
      * Obtain a reference to the histogram made from this DepthImage
      */
     inline const Histogram& getHistogram() const { return histogram; }
@@ -197,9 +181,6 @@ public:
 protected:
     const char *fileName;
     size_t nameSize;
-    int height;
-    int width;
-    std::vector<uint8_t> pixelData;
     Histogram histogram;
     mutable int category = -2;
 };

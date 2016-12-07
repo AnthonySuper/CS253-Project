@@ -23,17 +23,15 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
                     histogram.inc(tmp);
                 }
                 tmp = -1;
-                numRead++;
+                ++numRead;
             }
         }
-        else if((unsigned char) *scan - '0' <= '9' - '0') {
+        // THey promised no error cases
+        else {
             if(tmp == -1) {
                 tmp = 0;
             }
             tmp = tmp * 10 + ((*scan - '0'));
-        }
-        else {
-            throw std::runtime_error("Failure will robinson!");
         }
     }
     if(tmp > -1 && tmp < 255) {
@@ -44,26 +42,18 @@ DepthImage::DepthImage(const char *fname, size_t fsize, FileBuff& fb) :
 
 DepthImage::DepthImage(DepthImage&& o) :
     fileName(std::move(o.fileName)),
-    height(o.height),
-    width(o.width),
-    pixelData(std::move(o.pixelData)),
+
     histogram(std::move(o.histogram))
 {
-    o.height = 0;
-    o.width = 0;
 }
 
 DepthImage::DepthImage(const DepthImage &o) :
     fileName(o.fileName),
-    height(o.height),
-    width(o.width),
-    pixelData(o.pixelData),
     histogram(o.histogram)
 {}
 
 DepthImage::operator std::string() const  {
     std::stringstream s;
-    s << "DepthImage{height: " << height << ", width: " << width;
     s << ", fileName: \"" << fileName << "\"}";
     return s.str();
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
-time ./PA10 test_files/given/perceptron_train/correctfiles.txt test_files/given/perceptron_train/correctfiles.txt 3
+time ./PA10 test_files/perceptron_train/input_3.txt test_files/perceptron_test/test.txt 7
 
