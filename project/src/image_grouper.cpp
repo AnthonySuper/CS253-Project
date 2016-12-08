@@ -5,9 +5,11 @@ pt(p)
 {
     groups.reserve(ds.size());
     badIndexes.reserve(ds.size());
-    for(int i = 0; i < ds.size(); ++i) {
+    size_t size = ds.size();
+    for(unsigned int i = 0; i < size; ++i) {
         groups.emplace_back(ds.ptrAt(i));
     }
+    
 }
 
 void ImageGrouper::reduceToGroupCount(int count)
@@ -17,10 +19,13 @@ void ImageGrouper::reduceToGroupCount(int count)
     }
     int iterationsReq = groups.size() - count;
     calculateNearestNeighbors();
+    int q = 0;
     for(int i = 0; i < iterationsReq; ++i) {
         mergeClosetGroups();
+        ++q;
     }
 }
+
 
 void ImageGrouper::mergeGroups(int first,
                                int second)
@@ -29,17 +34,14 @@ void ImageGrouper::mergeGroups(int first,
     auto &secondGroup = groups.at(second);
     firstGroup.group.merge(secondGroup.group);
     groups.erase(groups.begin() + second);
+    firstGroup.resetSimilarity();
     badIndexes.clear();
     for(unsigned int i = 0; i < groups.size(); ++i) {
         auto &g = groups.at(i);
-        if(g.nearestIndex == first || g.nearestIndex == second) {
+        if(g.nearestIndex == first || g.nearestIndex >= second) {
             g.resetSimilarity();
             badIndexes.push_back(i);
         }
-        else if(g.nearestIndex >= second - 1) {
-            g.nearestIndex--;
-        }
-        
     }
     badIndexes.push_back(first);
     for(auto i: badIndexes) {
@@ -54,6 +56,7 @@ void ImageGrouper::mergeGroups(int first,
             g2.compareSimilarity(i, sim);
         }
     }
+    
 }
 
 
@@ -115,6 +118,7 @@ void ImageGrouper::calculateNearestNeighbor(int base,
         group2.compareSimilarity(base, similarity);
     }
 }
+
 
 
 std::ostream& operator<<(std::ostream& os, const ImageGrouper &g) {

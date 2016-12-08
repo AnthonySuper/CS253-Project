@@ -56,7 +56,7 @@ struct FileBuff {
         }
         struct stat s;
         fstat(fd, &s);
-        fileSize = s.st_size;
+        fileSize = s.st_size + 1;
         begin = (char *) mmap(nullptr,
                               fileSize,
                               PROT_READ | PROT_WRITE,
@@ -73,6 +73,7 @@ struct FileBuff {
         }
          */
         end = begin + fileSize;
+        *(end - 1) = '\n';
         // close(fd);
     }
     

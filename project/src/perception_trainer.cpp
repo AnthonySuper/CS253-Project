@@ -3,7 +3,8 @@
 static Perception trainPerception(const ImageDataset& ds, int itrCount, int klass) {
     Perception p;
     for(int i = 0; i < itrCount; ++i) {
-        for(int j = 0; j < ds.size(); ++j) {
+        size_t sz = ds.size();
+        for(unsigned int j = 0; j < sz; ++j) {
             const auto& img = ds.refAt(j);
             int c = ((img.getCategory() == klass) ? 1 : -1);
             p.train(img.getHistogram(), c);

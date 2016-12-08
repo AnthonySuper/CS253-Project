@@ -92,4 +92,6 @@ protected:
     std::set<int> classList;
 };
 
+
+std::ostream& operator<<(std::ostream&os, ImageDataset& is);
 #endif

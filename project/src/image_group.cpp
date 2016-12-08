@@ -8,6 +8,7 @@ std::ostream& operator<<(std::ostream& os, const ImageGroup& g) {
     return os;
 }
 
+
 ImageGroup::operator std::string() const {
     std::stringstream ss;
     ss << *this;
@@ -41,8 +42,8 @@ int ImageGroup::getMostOccuringClassCount() const {
 
 void ImageGroup::merge(ImageGroup& other) {
     hg.merge(other.hg);
-    images.reserve(images.size() + other.images.size());
-    std::move(other.images.begin(),
-              other.images.end(),
-              std::back_inserter(images));
+    auto& im = other.images;
+    images.insert(images.end(),
+                  im.begin(),
+                  im.end());
 }
